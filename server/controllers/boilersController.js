@@ -1,5 +1,5 @@
 const ApiError = require('../error/ApiError')
-const { Boiler, BoilerCRFG } = require('../models/models')
+const { Boiler, BoilerRGC } = require('../models/models')
 const BoilersApi = require('../Api/BoilersApi')
 
 class BoilersController {
@@ -21,25 +21,28 @@ class BoilersController {
         return res.json({message: 'Succesful created!', boiler})
     }
 
-    async calcBoilerCRFGS(req, res) {
+    /**
+     * ХОП для котла
+     */
+    async calcBoilerRGC(req, res) {
         const { boiler_mark, load, efficiency } = req.body;
 
-        const boilerCRFGS = await BoilerCRFG.findOne({
+        const boilerRGC = await BoilerRGC.findOne({
             where: {
                 ['boiler_mark']: boiler_mark
             },
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         })
 
-        if (boilerCRFGS) {
-            res.json({message: "Already exist at DB", crfg: boilerCRFGS.dataValues})
+        if (boilerRGC) {
+            res.json({message: "Already exist at DB", rgc: boilerRGC.dataValues})
         }
 
-        const crfg = await BoilersApi.calcCRFGS(load, efficiency);
+        const rgc = await BoilersApi.calcRGC(load, efficiency);
 
-        const createdCrfg = await BoilerCRFG.create({boiler_mark, ...crfg});
+        const createdRGC = await BoilerRGC.create({boiler_mark, ...rgc});
 
-        return res.json({message: "Successful added crfg to DB", createdCrfg})
+        return res.json({message: "Successful added RGC to DB", createdRGC})
     }
 
     /**
@@ -66,6 +69,31 @@ class BoilersController {
         const result = await BoilersApi.getOptimalEquipment(boilers)
 
         return res.json(result);
+    }
+
+    async calcBoilerShopRGC(req, res) {
+        const boilersInventory = req.body;
+        const boilersRGCArr = [];
+
+        for (const [key, value] of Object.entries(boilersInventory)) {
+            // Если котёл ТП-87А или ТП-81, то ивзлекаем из БД
+            // ХОП для котла ТП-80, т.к. они у них одинаковые
+            const mark = ['ТП-87А', 'ТП-81'].includes(key) ? 'ТП-80' : key;
+
+            const boilerRGC = await BoilerRGC.findOne({
+                where: {
+                    ['boiler_mark']: mark
+                },
+                attributes: { exclude: ['createdAt', 'updatedAt'] }
+            })
+
+            // Складываем столько значений ХОП, сколько котлов данного типа
+            boilersRGCArr.push(...Array(value).fill(boilerRGC.dataValues));
+        }
+
+        const boilerShopRGC = await BoilersApi.calcBoilerShopRGC(boilersRGCArr);
+
+        return res.json(boilerShopRGC);
     }
 }
 

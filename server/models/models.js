@@ -11,7 +11,7 @@ const Boiler = sequelize.define('boiler', {
 })
 
 // Хоп котла 
-const BoilerCRFG = sequelize.define('boiler_crfg', {
+const BoilerRGC = sequelize.define('boiler_rgc', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     ['boiler_mark']: {type: DataTypes.STRING},
     ['b_values']: {type: DataTypes.ARRAY(DataTypes.FLOAT)},
@@ -37,12 +37,12 @@ const TppYearTask = sequelize.define('tpp_year_task', {
     hear_performance: {type: DataTypes.ARRAY(DataTypes.INTEGER)}
 })
 
-Boiler.hasMany(BoilerCRFG)
-BoilerCRFG.belongsTo(Boiler)
+Boiler.hasMany(BoilerRGC)
+BoilerRGC.belongsTo(Boiler)
 
 module.exports = {
     Boiler,
-    BoilerCRFG,
+    BoilerRGC,
     Turbine,
     TppYearTask
 }

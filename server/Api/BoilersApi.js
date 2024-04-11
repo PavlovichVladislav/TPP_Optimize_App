@@ -20,12 +20,22 @@ class BoilersApi {
         }
     }
 
-    async calcCRFGS(load, efficiency) {
+    async calcBoilerRGC(load, efficiency) {
         try {
             const result = await this.axios.post('/boilers/boiler-hop', {
                 load,
                 efficiency
             })
+
+            return result.data;
+        } catch (error) {
+            throw new ApiError(500, 'Internal server error')
+        }
+    }
+
+    async calcBoilerShopRGC(boilersRGC) {
+        try {
+            const result = await this.axios.post('/boilers/boiler-shop-hop', boilersRGC)
 
             return result.data;
         } catch (error) {
