@@ -13,9 +13,9 @@ const Boiler = sequelize.define('boiler', {
 // Хоп котла 
 const BoilerCRFG = sequelize.define('boiler_crfg', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    ['boiler_mark']: {type: DataTypes.INTEGER},
-    ['b_values']: {type: DataTypes.ARRAY(DataTypes.INTEGER)},
-    ['Q_values']: {type: DataTypes.ARRAY(DataTypes.INTEGER)}
+    ['boiler_mark']: {type: DataTypes.STRING},
+    ['b_values']: {type: DataTypes.ARRAY(DataTypes.FLOAT)},
+    ['Q_values']: {type: DataTypes.ARRAY(DataTypes.FLOAT)}
 })
 
 // Турбина
@@ -29,12 +29,12 @@ const Turbine = sequelize.define('turbine', {
 
 // Годовой план станции
 const TppYearTask = sequelize.define('tpp_year_task', {
-    ['id']: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     mark: {type: DataTypes.STRING},
-    ['station']: {type: DataTypes.STRING},
-    ['year']: {type: DataTypes.INTEGER},
-    ['output_power']: {type: DataTypes.ARRAY(DataTypes.INTEGER)},
-    ['hear_performance']: {type: DataTypes.ARRAY(DataTypes.INTEGER)}
+    station: {type: DataTypes.STRING},
+    year: {type: DataTypes.INTEGER},
+    output_power: {type: DataTypes.ARRAY(DataTypes.INTEGER)},
+    hear_performance: {type: DataTypes.ARRAY(DataTypes.INTEGER)}
 })
 
 Boiler.hasMany(BoilerCRFG)

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const ApiError = require('../error/ApiError');
 
 class BoilersApi {
     constructor() {
@@ -13,9 +14,22 @@ class BoilersApi {
                 data: [...boilers]
             })
 
-            return result;
+            return result.data;
         } catch (error) {
-            console.log(e.message);
+            throw new ApiError(500, 'Internal server error')
+        }
+    }
+
+    async calcCRFGS(load, efficiency) {
+        try {
+            const result = await this.axios.post('/boilers/boiler-hop', {
+                load,
+                efficiency
+            })
+
+            return result.data;
+        } catch (error) {
+            throw new ApiError(500, 'Internal server error')
         }
     }
 }
