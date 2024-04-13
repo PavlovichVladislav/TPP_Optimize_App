@@ -4,45 +4,21 @@ const BoilersApi = require('../Api/BoilersApi')
 
 class BoilersController {
     /**
-     * Метод для получения всех котлов из БД 
-     */
-    async getBoilers(req, res, next) {
-        const boilers = await Boiler.findAll()
-        
-        return res.json(boilers)
-    }
-
-    /**
      * Добавление нового котла в БД
-     */
+    */
     async addBoiler(req, res) {
         const boiler = await Boiler.create(req.body)
 
         return res.json({message: 'Succesful created!', boiler})
     }
-
+    
     /**
-     * ХОП для котла
-     */
-    async calcBoilerRGC(req, res) {
-        const { boiler_mark, load, efficiency } = req.body;
-
-        const boilerRGC = await BoilerRGC.findOne({
-            where: {
-                ['boiler_mark']: boiler_mark
-            },
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-        })
-
-        if (boilerRGC) {
-            res.json({message: "Already exist at DB", rgc: boilerRGC.dataValues})
-        }
-
-        const rgc = await BoilersApi.calcRGC(load, efficiency);
-
-        const createdRGC = await BoilerRGC.create({boiler_mark, ...rgc});
-
-        return res.json({message: "Successful added RGC to DB", createdRGC})
+     * Метод для получения всех котлов из БД 
+    */
+    async getBoilers(req, res, next) {
+        const boilers = await Boiler.findAll()
+        
+        return res.json(boilers)
     }
 
     /**
@@ -69,6 +45,30 @@ class BoilersController {
         const result = await BoilersApi.getOptimalEquipment(boilers)
 
         return res.json(result);
+    }
+
+    /**
+     * ХОП для котла
+    */
+    async calcBoilerRGC(req, res) {
+        const { boiler_mark, load, efficiency } = req.body;
+
+        const boilerRGC = await BoilerRGC.findOne({
+            where: {
+                ['boiler_mark']: boiler_mark
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        })
+
+        if (boilerRGC) {
+            res.json({message: "Already exist at DB", rgc: boilerRGC.dataValues})
+        }
+
+        const rgc = await BoilersApi.calcRGC(load, efficiency);
+
+        const createdRGC = await BoilerRGC.create({boiler_mark, ...rgc});
+
+        return res.json({message: "Successful added RGC to DB", createdRGC})
     }
 
     async calcBoilerShopRGC(req, res) {

@@ -1,11 +1,9 @@
-const axios = require('axios');
 const ApiError = require('../error/ApiError');
+const BaseApi = require('./BaseApi');
 
-class BoilersApi {
+class BoilersApi extends BaseApi {
     constructor() {
-        this.axios = axios.create({
-            baseURL: 'http://127.0.0.1:4002'
-        })
+        super();
     }
 
     async getOptimalEquipment(boilers) {

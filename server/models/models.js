@@ -24,7 +24,7 @@ const Turbine = sequelize.define('turbine', {
     mark: {type: DataTypes.STRING},
     ['electricity_power']: {type: DataTypes.INTEGER},
     ['thermal_power']: {type: DataTypes.INTEGER},
-    ['power_generation']: {type: DataTypes.INTEGER}
+    ['power_generation']: {type: DataTypes.FLOAT}
 })
 
 // Годовой план станции
