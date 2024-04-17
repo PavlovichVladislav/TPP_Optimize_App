@@ -59,22 +59,40 @@ class TurbinesController {
         try {
             const { turbine_mark, steam_consumption } = req.body;
 
-            const summerCollectionPoint = await TurbinesApi.calcCollectionPoint(steam_consumption, "summer");
-            const winterCollectionPoint = await TurbinesApi.calcCollectionPoint(steam_consumption, "winter");
-            const offSeasonCollectionPoint = await TurbinesApi.calcCollectionPoint(steam_consumption, "offSeason");
-    
-            const rgcSummer = await TurbinesApi.calcRGC(turbine_mark, summerCollectionPoint);
-            const rgcWiner = await TurbinesApi.calcRGC(turbine_mark, winterCollectionPoint);
-            const rgcOffSeason = await TurbinesApi.calcRGC(turbine_mark, offSeasonCollectionPoint);
+            const rgcSummer = await TurbinesApi.calcTurbineRGC(turbine_mark, steam_consumption, "summer");
+            const rgcWiner = await TurbinesApi.calcTurbineRGC(turbine_mark, steam_consumption, "winter");
+            const rgcOffSeason = await TurbinesApi.calcTurbineRGC(turbine_mark, steam_consumption, "offSeason");
     
             return res.json({
-                message: "Turbine rgc", 
-                summer: rgcSummer,
-                winter: rgcWiner,
-                offSeason: rgcOffSeason
+                message: "Turbine rgc",
+                mark: rgcSummer.mark,
+                summer: {hop: rgcSummer.hop, flowChar: rgcSummer.flow_char},
+                winter: {hop: rgcWiner.hop, flowChar: rgcWiner.flow_char},
+                offSeason: {hop: rgcOffSeason.hop, flowChar: rgcOffSeason.flow_char},
             })
         } catch (error) {
             next(new ApiError(500, error.message))
+        }
+    }
+
+    /*
+    * ХОП турбинного цеха
+    */
+    async calcTurbineShopRGC(req, res, next) {
+        try {
+            const { turbinesData } = req.body;
+
+            const summerRGC = await TurbinesApi.calcTurbinesShopRGC(turbinesData, 'summer');
+            const winterRGC = await TurbinesApi.calcTurbinesShopRGC(turbinesData, 'winter')
+            const offSeasonRGC = await TurbinesApi.calcTurbinesShopRGC(turbinesData, 'offSeason')
+    
+            return res.json({
+                summerRGC,
+                winterRGC,
+                offSeasonRGC
+            })
+        } catch(e) {
+            next(new ApiError(500, e.message))
         }
     }
 }

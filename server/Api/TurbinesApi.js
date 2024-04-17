@@ -24,10 +24,20 @@ class TurbinesApi extends BaseApi{
         return result.data;
     }
 
-    async calcRGC(mark, steam_consumption) {
+    async calcTurbineRGC(turbine_mark, steam_consumption, season) {
         const result = await this.axios.post('/turbines/turbine-hop', {
-            mark,
-            steam_consumption
+            turbine_mark,
+            steam_consumption,
+            season
+        })
+
+        return result.data;
+    }
+
+    async calcTurbinesShopRGC(turbines_data, season) {
+        const result = await this.axios.post('/turbines/turbine-shop-hop', {
+            turbines_data,
+            season
         })
 
         return result.data;
