@@ -5,6 +5,6 @@ const router = new Router()
 router.post('/rgc', stationController.calcStationRGC)
 router.get('/mc', )
 router.get('/mr', )
-router.get('/optimize', )
+router.get('/optimize', stationController.getOptimalOperatingMode)
 
 module.exports = router

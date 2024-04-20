@@ -14,6 +14,17 @@ class StationApi extends BaseApi{
 
         return result.data;
     }
+
+    async getOptimalMode(hop, fuelPirce, demand, season) {
+        const result = await this.axios.post('/station/optimize', {
+            hop,
+            fuelPirce,
+            demand,
+            season
+        })
+
+        return result.data;
+    }
 }
 
 module.exports = new StationApi();
