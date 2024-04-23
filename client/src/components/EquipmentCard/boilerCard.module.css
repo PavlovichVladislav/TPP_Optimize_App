@@ -1,0 +1,9 @@
+.cardWrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.cardHeader {
+    display: flex;
+}

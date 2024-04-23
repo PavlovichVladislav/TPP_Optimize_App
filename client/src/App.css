@@ -1,0 +1,11 @@
+#root {
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+.app {
+  padding-top: 30px;
+  background: #F6F6F6;
+  display: flex;
+  gap: 48px;
+}
