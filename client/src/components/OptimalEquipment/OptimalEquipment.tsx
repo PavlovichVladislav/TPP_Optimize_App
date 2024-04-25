@@ -3,6 +3,8 @@ import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
 import { BoilerCard } from "../EquipmentCard/BoilerCard";
 import { TurbineCard } from "../EquipmentCard/TurbineCard";
+import { Table } from "../Table/Table";
+import { Graph } from "../RgcChart/RgcChar";
 
 export interface Boiler {
    station_number: number;
@@ -36,6 +38,17 @@ export interface OptimalTurbinesInventory {
    winterTurbines: Turbine[];
 }
 
+export interface BoilerRgc {
+   Q: number[];
+   b: number[];
+}
+
+export interface BoilerShopRgc {
+   offSeasonBoilerShopRGC: BoilerRgc;
+   summerBoilerShopRGC: BoilerRgc;
+   winterBoilerShopRGC: BoilerRgc;
+}
+
 export const OptimalEquipment = () => {
    const [boilers, setBoilers] = useState<Boiler[]>([]);
    const [turbines, setTurbines] = useState<Turbine[]>([]);
@@ -50,6 +63,7 @@ export const OptimalEquipment = () => {
    const [optimalTurbines, setOptimalTurbines] = useState<OptimalTurbinesInventory | undefined>(
       undefined
    );
+   const [boilerShopRgc, setBoilerShopRgc] = useState<BoilerShopRgc | undefined>(undefined);
 
    const getEquipment = async () => {
       const { boilers, turbines } = await optimizeApi.getEquipment();
@@ -89,13 +103,40 @@ export const OptimalEquipment = () => {
    };
 
    const calcBoilerShopRGC = async () => {
-      console.log(optimalBoilers);
       const { boilerShopRgc } = await optimizeApi.calcBoilerShopRGC(optimalBoilers!);
 
-      console.log(boilerShopRgc);
-   }
+      setBoilerShopRgc(boilerShopRgc);
+   };
 
    const renderContent = () => {
+      if (boilerShopRgc) {
+         return (
+            <>
+               <Table
+                  firstRow={boilerShopRgc.summerBoilerShopRGC.b}
+                  secondRow={boilerShopRgc.summerBoilerShopRGC.Q}
+               />
+{/* 
+               <Graph 
+                  xData={boilerShopRgc.summerBoilerShopRGC.Q}
+                  yData={boilerShopRgc.summerBoilerShopRGC.b}
+                  graphTitle="Хоп"
+                  xAxisLabel="Q"
+                  yAxisLabel="b"
+               /> */}
+
+               <Table
+                  firstRow={boilerShopRgc.winterBoilerShopRGC.b}
+                  secondRow={boilerShopRgc.winterBoilerShopRGC.Q}
+               />
+               <Table
+                  firstRow={boilerShopRgc.offSeasonBoilerShopRGC.b}
+                  secondRow={boilerShopRgc.offSeasonBoilerShopRGC.Q}
+               />
+            </>
+         );
+      }
+
       if (optimalBoilers || optimalTurbines) {
          return (
             <>
