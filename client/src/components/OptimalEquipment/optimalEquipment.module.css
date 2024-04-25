@@ -1,3 +1,8 @@
 .optimalEquipment {
-    width: 720px;
+    width: 920px;
+}
+
+.equipmentWrapper {
+    display: flex;
+    gap: 12px;
 }

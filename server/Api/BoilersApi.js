@@ -8,7 +8,7 @@ class BoilersApi extends BaseApi {
 
     async getOptimalEquipment(boilers) {
         try {
-            const result = this.axios.post('/boilers/optimal', {
+            const result = await this.axios.post('/boilers/optimal', {
                 data: [...boilers]
             })
 
