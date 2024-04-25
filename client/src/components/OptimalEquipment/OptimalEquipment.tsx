@@ -88,6 +88,13 @@ export const OptimalEquipment = () => {
       setOptimalTurbines(optimalTurbines);
    };
 
+   const calcBoilerShopRGC = async () => {
+      console.log(optimalBoilers);
+      const { boilerShopRgc } = await optimizeApi.calcBoilerShopRGC(optimalBoilers!);
+
+      console.log(boilerShopRgc);
+   }
+
    const renderContent = () => {
       if (optimalBoilers || optimalTurbines) {
          return (
@@ -148,6 +155,7 @@ export const OptimalEquipment = () => {
                      )}
                   </div>
                )}
+               <button onClick={calcBoilerShopRGC}>Рассчитать ХОП</button>
             </>
          );
       }

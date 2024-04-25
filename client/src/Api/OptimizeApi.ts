@@ -1,4 +1,5 @@
 import axios from "axios";
+import { OptimalBoilersInventory } from "../components/OptimalEquipment/OptimalEquipment";
 
 class OptimizeApi {
    // constructor() {
@@ -27,6 +28,15 @@ class OptimizeApi {
       );
 
       return { optimalBoilers, optimalTurbines };
+   }
+
+   async calcBoilerShopRGC(boilersInventory: OptimalBoilersInventory) {
+      const { data: boilerShopRgc } = await axios.post(
+         "http://localhost:4001/api/boilers/shop-rgc",
+         boilersInventory
+      );
+
+      return { boilerShopRgc };
    }
 }
 

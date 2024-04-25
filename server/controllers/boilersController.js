@@ -64,7 +64,7 @@ class BoilersController {
             res.json({message: "Already exist at DB", rgc: boilerRGC.dataValues})
         }
 
-        const rgc = await BoilersApi.calcRGC(load, efficiency);
+        const rgc = await BoilersApi.calcBoilerRGC(load, efficiency);
 
         const createdRGC = await BoilerRGC.create({boiler_mark, ...rgc});
 
@@ -73,27 +73,72 @@ class BoilersController {
 
     async calcBoilerShopRGC(req, res) {
         const boilersInventory = req.body;
-        const boilersRGCArr = [];
 
-        for (const [key, value] of Object.entries(boilersInventory)) {
-            // Если котёл ТП-87А или ТП-81, то ивзлекаем из БД
-            // ХОП для котла ТП-80, т.к. они у них одинаковые
-            const mark = ['ТП-87А', 'ТП-81'].includes(key) ? 'ТП-80' : key;
+        console.log('--------')
+        console.log(boilersInventory)
 
-            const boilerRGC = await BoilerRGC.findOne({
-                where: {
-                    ['boiler_mark']: mark
-                },
-                attributes: { exclude: ['createdAt', 'updatedAt'] }
-            })
-
-            // Складываем столько значений ХОП, сколько котлов данного типа
-            boilersRGCArr.push(...Array(value).fill(boilerRGC.dataValues));
+        function countBoilers(boilers) {
+            let summerBoilers = {};
+            let winterBoilers = {};
+            let offSeasonBoilers = {};
+        
+            // Функция для подсчета количества котлов с одним и тем же mark
+            function countMarks(boilerList, resultObj) {
+                boilerList.forEach(boiler => {
+                    const mark = boiler.mark;
+                    resultObj[mark] = (resultObj[mark] || 0) + 1;
+                });
+            }
+        
+            // Подсчет для summerBoilers
+            countMarks(boilers.summerBoilers, summerBoilers);
+        
+            // Подсчет для winterBoilers
+            countMarks(boilers.winterBoilers, winterBoilers);
+        
+            // Подсчет для offSeasonBoilers
+            countMarks(boilers.offSeasonBoilers, offSeasonBoilers);
+        
+            return { summerBoilers, winterBoilers, offSeasonBoilers };
         }
 
-        const boilerShopRGC = await BoilersApi.calcBoilerShopRGC(boilersRGCArr);
+        const { summerBoilers, winterBoilers, offSeasonBoilers } = countBoilers(boilersInventory);
+        
+        console.log(summerBoilers, winterBoilers, offSeasonBoilers)
 
-        return res.json(boilerShopRGC);
+        const calcBoilerRgcPerSeason = async (boilersInventory) => {
+            const boilersRGCArr = [];
+
+            for (const [key, value] of Object.entries(boilersInventory)) {
+                // Если котёл ТП-87А или ТП-81, то ивзлекаем из БД
+                // ХОП для котла ТП-80, т.к. они у них одинаковые
+                const mark = ['ТП-87А', 'ТП-81'].includes(key) ? 'ТП-80' : key;
+    
+                const boilerRGC = await BoilerRGC.findOne({
+                    where: {
+                        ['boiler_mark']: mark
+                    },
+                    attributes: { exclude: ['createdAt', 'updatedAt'] }
+                })
+    
+                // Складываем столько значений ХОП, сколько котлов данного типа
+                boilersRGCArr.push(...Array(value).fill(boilerRGC.dataValues));
+            }
+    
+            const boilerShopRGC = await BoilersApi.calcBoilerShopRGC(boilersRGCArr);
+
+            return boilerShopRGC;
+        }
+
+        const summerBoilerShopRGC = await calcBoilerRgcPerSeason(summerBoilers);
+        const winterBoilerShopRGC = await calcBoilerRgcPerSeason(winterBoilers);
+        const offSeasonBoilerShopRGC = await calcBoilerRgcPerSeason(offSeasonBoilers);
+
+        console.log(summerBoilerShopRGC)
+        console.log(winterBoilerShopRGC)
+        console.log(offSeasonBoilerShopRGC)
+
+        return res.json({summerBoilerShopRGC, winterBoilerShopRGC, offSeasonBoilerShopRGC});
     }
 }
 
