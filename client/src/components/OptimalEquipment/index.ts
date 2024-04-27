@@ -1,1 +1,0 @@
-export { OptimalEquipment } from './OptimalEquipment';

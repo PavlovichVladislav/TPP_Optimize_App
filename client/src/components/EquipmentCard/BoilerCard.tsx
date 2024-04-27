@@ -1,7 +1,9 @@
 import { FC } from "react";
-import { Boiler } from "../OptimalEquipment/OptimalEquipment";
+
 import { BoilerIcon } from "./BoilerIcon";
 import styles from "./boilerCard.module.css";
+import { Boiler } from "../../types/types";
+import { Button } from "@skbkontur/react-ui";
 
 interface Props {
    boiler: Boiler;
@@ -15,29 +17,41 @@ export const BoilerCard: FC<Props> = ({ boiler, selected, onAddBoiler, onDeleteB
 
    const renderSelectBtn = () => {
       if (onDeleteBoiler && onAddBoiler) {
-         return (
-            selected ? (
-               <button onClick={() => onDeleteBoiler(station_number)}>Удалить</button>
-            ) : (
-               <button onClick={() => onAddBoiler(station_number)}>Добавить</button>
-            )
-         )
+         return selected ? (
+            <Button use="primary" size="medium" onClick={() => onDeleteBoiler(station_number)}>
+               Удалить
+            </Button>
+         ) : (
+            <Button use="primary" size="medium" onClick={() => onAddBoiler(station_number)}>
+               Добавить
+            </Button>
+         );
       }
 
       return null;
-   }
- 
+   };
+
    return (
       <div className={styles.cardWrapper}>
-         <BoilerIcon />
-         <div>
-            <div className={styles.cardHeader}>
-               <h3>Котёл. Станционный номер:{station_number}</h3>
-               {renderSelectBtn()}
+         <div className={styles.cardDescr}>
+            <BoilerIcon />
+            <div>
+               <h3 className={styles.cardTitle}>Котёл. Станционный номер:{station_number}</h3>
+               <div className={styles.charWrapper}>
+                  Марка котла: <span className={styles.charValue}>{mark}</span>
+               </div>
+               <div className={styles.charWrapper}>
+                  Номинальная макисмальная производительность:{" "}
+                  <span className={styles.charValue}>{heat_performance} т/ч</span>
+               </div>
+               <div className={styles.charWrapper}>
+                  Число запусков с начала эксплуатации{" "}
+                  <span className={styles.charValue}>{starts_number}</span>
+               </div>
             </div>
-            <div>Марка котла: {mark}</div>
-            <div>Номинальная макисмальная производительность: {heat_performance} т/ч</div>
-            <div>Число запусков с начала эксплуатации {starts_number}</div>
+         </div>
+         <div className={styles.cardFooter}>
+            {renderSelectBtn()}
          </div>
       </div>
    );

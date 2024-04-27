@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Turbine } from "../OptimalEquipment/OptimalEquipment";
+import { Turbine } from "../BoilerShopRgc/BoilerShopRgc";
 import { BoilerIcon } from "./BoilerIcon";
 import styles from "./boilerCard.module.css";
 

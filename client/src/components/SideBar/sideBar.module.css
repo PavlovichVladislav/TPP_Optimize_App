@@ -1,3 +1,29 @@
-.sideBar { 
+.sideBar {
+    width: 232px;
+    padding: 0 16px;
+    /* display: flex; */
+    /* flex-direction: column; */
+}
+
+.appTitle {
+    color: rgb(253, 167, 12);
+    margin-bottom: 8px;
+}
+
+.link {
+    display: block;
     width: 200px;
+    height: 24px;
+    padding: 12px 8px 12px 8px;
+    border-radius: 8px 0px 0px 0px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    text-align: left;
+    color: #222222;
+    text-decoration: none;
+}
+
+.link:hover {
+    background-color: #FFFFFF;
 }

@@ -1,13 +1,17 @@
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import { OptimalEquipment } from "./components/OptimalEquipment";
-import { SideBar } from "./components/SideBar/SideBar";
+import { AppRouter } from "./Router/AppRouter";
+import { THEME_2022, ThemeContext } from '@skbkontur/react-ui';
 
 function App() {
    return (
-      <div className="app" >
-         <SideBar />
-         <OptimalEquipment/>
-      </div>
+      <>
+         <ThemeContext.Provider value={THEME_2022}>
+            <BrowserRouter>
+               <AppRouter /> 
+            </BrowserRouter>
+         </ThemeContext.Provider>;
+      </>
    );
 }
 

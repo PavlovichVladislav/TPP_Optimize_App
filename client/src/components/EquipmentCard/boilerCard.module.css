@@ -1,9 +1,41 @@
 .cardWrapper {
+    padding: 12px 24px;
+    border-radius: 16px;
+    margin-bottom: 6px;
+    background: #FFFFFF;
+}
+
+.cardDescr {
     display: flex;
     gap: 12px;
     align-items: center;
 }
 
+.cardTitle {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 40px;
+}
+
+.charWrapper {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 32px;
+}
+
+.charValue {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    text-align: left;
+}
+
 .cardHeader {
     display: flex;
+}
+
+.cardFooter {
+    margin-top: 8px;
+    display: flex;
+    justify-content: end;
 }
