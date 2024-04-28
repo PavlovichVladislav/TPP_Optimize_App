@@ -3,6 +3,8 @@ import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
 import { Button } from "@skbkontur/react-ui";
 import { TurbineCard } from "../EquipmentCard/TurbineCard";
+import { SteamConsumption } from "../../types/types";
+import { Table } from "../Table/Table";
 
 export interface Turbine {
    station_number: number;
@@ -23,25 +25,28 @@ export interface OptimalTurbinesInventory {
    winterTurbines: Turbine[];
 }
 
-export interface BoilerRgc {
-   Q: number[];
-   b: number[];
-}
-
-export interface BoilerShopRgc {
-   offSeasonBoilerShopRGC: BoilerRgc;
-   summerBoilerShopRGC: BoilerRgc;
-   winterBoilerShopRGC: BoilerRgc;
+export interface TurbineShopRgc {
+   flow_char: {
+      x: number[]
+      y: number[]
+   },
+   turbines_shop_hop: {
+      x: number[]
+      y: number[]
+   }
 }
 
 export const TurbineShopRgc = () => {
    const [turbines, setTurbines] = useState<Turbine[]>([]);
-   const [turbineNumbers, seTurbineNumbers] = useState<number[]>([]);
+   const [turbineNumbers, setTurbineNumbers] = useState<number[]>([]);
    const [optimalTurbines, setOptimalTurbines] = useState<OptimalTurbinesInventory | undefined>(
       undefined
    );
    const optimizeApi = new OptimizeApi();
-   
+   const [steamConsumptions, setSteamConsumptions] = useState<SteamConsumption[]>([]);
+
+   const [summerRgc, setSummerRgc] = useState<TurbineShopRgc | undefined>();
+
    const getTurbines = async () => {
       const { turbines } = await optimizeApi.getTurbines();
 
@@ -53,11 +58,14 @@ export const TurbineShopRgc = () => {
    }, []);
 
    const addTurbine = (number: number) => {
-      seTurbineNumbers([...turbineNumbers, number]);
+      console.log(number);
+      console.log("add");
+
+      setTurbineNumbers([...turbineNumbers, number]);
    };
 
    const deleteTurbine = (number: number) => {
-      seTurbineNumbers(turbineNumbers.filter((turbineNumber) => turbineNumber !== number));
+      setTurbineNumbers(turbineNumbers.filter((turbineNumber) => turbineNumber !== number));
    };
 
    const onCalcEquipment = async () => {
@@ -67,71 +75,118 @@ export const TurbineShopRgc = () => {
    };
 
    const onCalcTurbineShopRgc = async () => {
-    console.log('optimal');
-   }
+      if (optimalTurbines) {
+         const summerTurbinesData: SteamConsumption[] = optimalTurbines.summerTurbines.map(
+            (turbine) => steamConsumptions[turbine.station_number]
+         );
+
+         const winterTurbinesData: SteamConsumption[] = optimalTurbines.winterTurbines.map(
+            (turbine) => steamConsumptions[turbine.station_number]
+         );
+
+         const offSeasonTurbinesData: SteamConsumption[] = optimalTurbines.offSeasonTurbines.map(
+            (turbine) => steamConsumptions[turbine.station_number]
+         );
+   
+         const { turbineShopRgc } = await optimizeApi.calcTurbinesShopRGC({
+            season: "summer",
+            turbinesData: summerTurbinesData
+         });
+
+         const winterShopRgc = await optimizeApi.calcTurbinesShopRGC({
+            season: "winter",
+            turbinesData: winterTurbinesData
+         });
+
+         const offSeasonShopRgc = await optimizeApi.calcTurbinesShopRGC({
+            season: "offSeason",
+            turbinesData: offSeasonTurbinesData
+         });
+   
+         console.log(turbineShopRgc);
+         console.log(winterShopRgc);
+         console.log(offSeasonShopRgc);
+
+         setSummerRgc(turbineShopRgc)
+      }
+   };
 
    const renderContent = () => {
-    //   if (boilerShopRgc) {
-    //      return (
-    //         <>
-    //            <Table
-    //               firstRow={boilerShopRgc.summerBoilerShopRGC.b}
-    //               secondRow={boilerShopRgc.summerBoilerShopRGC.Q}
-    //            />
-    //            {/* 
-    //            <Graph 
-    //               xData={boilerShopRgc.summerBoilerShopRGC.Q}
-    //               yData={boilerShopRgc.summerBoilerShopRGC.b}
-    //               graphTitle="Хоп"
-    //               xAxisLabel="Q"
-    //               yAxisLabel="b"
-    //            /> */}
-
-    //            <Table
-    //               firstRow={boilerShopRgc.winterBoilerShopRGC.b}
-    //               secondRow={boilerShopRgc.winterBoilerShopRGC.Q}
-    //            />
-    //            <Table
-    //               firstRow={boilerShopRgc.offSeasonBoilerShopRGC.b}
-    //               secondRow={boilerShopRgc.offSeasonBoilerShopRGC.Q}
-    //            />
-    //         </>
-    //      );
-    //   }
+        if (summerRgc) {
+           return (
+              <>
+                 <Table
+                    firstRow={summerRgc.flow_char.x}
+                    secondRow={summerRgc.flow_char.y}
+                    title="Лето. Расходная характеристика"
+                 />
+                  <Table
+                    firstRow={summerRgc.turbines_shop_hop.x}
+                    secondRow={summerRgc.turbines_shop_hop.y}
+                    title="Лето. ХОП турбинного цеха"
+                 />
+                 {/*
+                 <Graph
+                    xData={boilerShopRgc.summerBoilerShopRGC.Q}
+                    yData={boilerShopRgc.summerBoilerShopRGC.b}
+                    graphTitle="Хоп"
+                    xAxisLabel="Q"
+                    yAxisLabel="b"
+                 /> */}
+              </>
+           );
+        }
 
       if (optimalTurbines) {
          return (
             <>
-                  <div className={styles.equipmentWrapper}>
-                     {optimalTurbines?.summerTurbines && (
-                        <div>
-                           <h2>Лето </h2>
-                           {optimalTurbines?.summerTurbines.map((turbine) => (
-                              <TurbineCard key={turbine.station_number} turbine={turbine} />
-                           ))}
-                        </div>
-                     )}
-                     {optimalTurbines?.offSeasonTurbines && (
-                        <div>
-                           <h2>Межсезонье </h2>
-                           {optimalTurbines?.offSeasonTurbines.map((turbine) => (
-                              <TurbineCard key={turbine.station_number} turbine={turbine} />
-                           ))}
-                        </div>
-                     )}
-                     {optimalTurbines?.winterTurbines && (
-                        <div>
-                           <h2>Зима </h2>
-                           {optimalTurbines?.winterTurbines.map((turbine) => (
-                              <TurbineCard key={turbine.station_number} turbine={turbine} />
-                           ))}
-                        </div>
-                     )}
+               {optimalTurbines?.summerTurbines && (
+                  <div>
+                     <h2>Лето </h2>
+                     <div>
+                        {optimalTurbines?.summerTurbines.map((turbine) => (
+                           <TurbineCard key={turbine.station_number} turbine={turbine} />
+                        ))}
+                     </div>
                   </div>
-               <Button use="primary" size="medium" onClick={onCalcTurbineShopRgc}>Рассчитать ХОП</Button>
+               )}
+               {optimalTurbines?.offSeasonTurbines && (
+                  <div>
+                     <h2>Межсезонье </h2>
+                     <div>
+                        {optimalTurbines?.offSeasonTurbines.map((turbine) => (
+                           <TurbineCard key={turbine.station_number} turbine={turbine} />
+                        ))}
+                     </div>
+                  </div>
+               )}
+               {optimalTurbines?.winterTurbines && (
+                  <div>
+                     <h2>Зима </h2>
+                     <div>
+                        {optimalTurbines?.winterTurbines.map((turbine) => (
+                           <TurbineCard key={turbine.station_number} turbine={turbine} />
+                        ))}
+                     </div>
+                  </div>
+               )}
+               <div className={styles.footerWrapper}>
+                  <Button use="primary" size="medium" onClick={onCalcTurbineShopRgc}>
+                     Рассчитать ХОП
+                  </Button>
+               </div>
             </>
          );
       }
+
+      const onSubmit = (station_number: number, steamConsumption: SteamConsumption) => {
+         const transformedConsumptions: SteamConsumption[] = steamConsumptions;
+         transformedConsumptions[station_number] = steamConsumption;
+
+         setSteamConsumptions(transformedConsumptions);
+      };
+
+      console.log(steamConsumptions);
 
       return (
          <>
@@ -144,19 +199,28 @@ export const TurbineShopRgc = () => {
                         turbine={turbine}
                         onAddTurbine={addTurbine}
                         onDeleteTurbine={deleteTurbine}
+                        onSubmit={onSubmit}
                      />
                   ))}
                </div>
             </div>
-            <Button use="primary" size="medium" onClick={onCalcEquipment}>Рассчитать</Button>
+            <div className={styles.footerWrapper}>
+               <Button use="primary" size="medium" onClick={onCalcEquipment}>
+                  Рассчитать
+               </Button>
+            </div>
          </>
       );
    };
 
    return (
       <section className={styles.optimalEquipment}>
-         <h2>Оптимальный состав оборудования</h2>
-         <div>Выберите оборудование, которое есть у вас в наличии</div>
+         <div className="layout">
+            <h2 className={styles.title}>Оптимальный состав оборудования</h2>
+            <div className={styles.subtitle}>
+               Выберите оборудование, которое есть у вас в наличии
+            </div>
+         </div>
          {renderContent()}
       </section>
    );

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { OptimalBoilersInventory } from "../types/types";
+import { OptimalBoilersInventory, OptimalTurbinesInventory } from "../types/types";
+import { TurbineShopRgc } from "../components/TurbineShopRgc/TurbineShopRgc";
 
 class OptimizeApi {
    // constructor() {
@@ -47,6 +48,15 @@ class OptimizeApi {
       );
 
       return { boilerShopRgc };
+   }
+
+   async calcTurbinesShopRGC(turbinesInventory: OptimalTurbinesInventory) {
+      const { data: turbineShopRgc } = await axios.post<TurbineShopRgc>(
+         "http://localhost:4001/api/turbines/shop-rgc",
+         turbinesInventory
+      );
+
+      return { turbineShopRgc };
    }
 }
 

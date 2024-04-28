@@ -10,3 +10,13 @@ export interface OptimalBoilersInventory {
    summerBoilers: Boiler[];
    winterBoilers: Boiler[];
 }
+
+export interface SteamConsumption {
+   turbine_mark: string;
+   steam_consumption: number[];
+}
+
+export interface OptimalTurbinesInventory {
+   turbinesData: SteamConsumption[]
+   season: string;
+}

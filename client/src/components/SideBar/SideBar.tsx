@@ -1,15 +1,26 @@
-import { Link } from 'react-router-dom';
-import styles from './sideBar.module.css';
+import { NavLink } from "react-router-dom";
+import styles from "./sideBar.module.css";
+import cl from "classnames";
+
+interface LinkStates {
+   isActive: boolean;
+}
 
 export const SideBar = () => {
-    return (
-        <section className={styles.sideBar}>
-            <h2 className={styles.appTitle}>Оптимальный режим работы станции</h2>
-            {/* <ul> */}
-            <Link className={styles.link} to="/boilers">ХОП котельного цеха</Link>
-            <Link className={styles.link} to="/turbines">ХОП турбинного цеха</Link>
-            {/* </ul> */}
-        </section>
-    );
-};
+   const getStyles = ({ isActive }: LinkStates) =>
+      isActive ? cl(styles.link, styles.linkAactive) : styles.link;
 
+   return (
+      <section className={styles.sideBar}>
+         <h2 className={styles.appTitle}>Оптимальный режим работы станции</h2>
+         {/* <ul> */}
+         <NavLink className={getStyles} to="/boilers">
+            ХОП котельного цеха
+         </NavLink>
+         <NavLink className={getStyles} to="/turbines">
+            ХОП турбинного цеха
+         </NavLink>
+         {/* </ul> */}
+      </section>
+   );
+};

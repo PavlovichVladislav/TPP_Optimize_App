@@ -84,6 +84,7 @@ export const BoilerShopRgc = () => {
          return (
             <>
                <Table
+                  title="ХОП лето"
                   firstRow={boilerShopRgc.summerBoilerShopRGC.b}
                   secondRow={boilerShopRgc.summerBoilerShopRGC.Q}
                />
@@ -97,10 +98,12 @@ export const BoilerShopRgc = () => {
                /> */}
 
                <Table
+                  title="ХОП зима"
                   firstRow={boilerShopRgc.winterBoilerShopRGC.b}
                   secondRow={boilerShopRgc.winterBoilerShopRGC.Q}
                />
                <Table
+                  title="ХОП межсезонье"
                   firstRow={boilerShopRgc.offSeasonBoilerShopRGC.b}
                   secondRow={boilerShopRgc.offSeasonBoilerShopRGC.Q}
                />
@@ -111,42 +114,42 @@ export const BoilerShopRgc = () => {
       if (optimalBoilers) {
          return (
             <>
-               {
-                  <>
-                     {optimalBoilers?.summerBoilers && (
+               <>
+                  {optimalBoilers?.summerBoilers && (
+                     <div>
+                        <h2>Лето </h2>
                         <div>
-                           <h2>Лето </h2>
-                           <div>
-                              {optimalBoilers.summerBoilers.map((boiler) => (
-                                 <BoilerCard key={boiler.station_number} boiler={boiler} />
-                              ))}
-                           </div>
+                           {optimalBoilers.summerBoilers.map((boiler) => (
+                              <BoilerCard key={boiler.station_number} boiler={boiler} />
+                           ))}
                         </div>
-                     )}
-                     {optimalBoilers?.offSeasonBoilers && (
+                     </div>
+                  )}
+                  {optimalBoilers?.offSeasonBoilers && (
+                     <div>
+                        <h2>Межсезонье </h2>
                         <div>
-                           <h2>Межсезонье </h2>
-                           <div>
-                              {optimalBoilers.summerBoilers.map((boiler) => (
-                                 <BoilerCard key={boiler.station_number} boiler={boiler} />
-                              ))}
-                           </div>
+                           {optimalBoilers.summerBoilers.map((boiler) => (
+                              <BoilerCard key={boiler.station_number} boiler={boiler} />
+                           ))}
                         </div>
-                     )}
-                     {optimalBoilers?.offSeasonBoilers && (
+                     </div>
+                  )}
+                  {optimalBoilers?.offSeasonBoilers && (
+                     <div>
+                        <h2>Зима </h2>
                         <div>
-                           <h2>Зима </h2>
-                           <div>
-                              {optimalBoilers.summerBoilers.map((boiler) => (
-                                 <BoilerCard key={boiler.station_number} boiler={boiler} />
-                              ))}
-                           </div>
+                           {optimalBoilers.summerBoilers.map((boiler) => (
+                              <BoilerCard key={boiler.station_number} boiler={boiler} />
+                           ))}
                         </div>
-                     )}
-                  </>
-               }
+                     </div>
+                  )}
+               </>
                <div className={styles.footerWrapper}>
-                  <Button use="primary" size="medium" onClick={calcBoilerShopRGC}>Рассчитать ХОП</Button>
+                  <Button use="primary" size="medium" onClick={calcBoilerShopRGC}>
+                     Рассчитать ХОП
+                  </Button>
                </div>
             </>
          );
@@ -168,7 +171,9 @@ export const BoilerShopRgc = () => {
                </div>
             </div>
             <div className={styles.footerWrapper}>
-               <Button use="primary" size="medium" onClick={onCalcEquipment}>Рассчитать</Button>
+               <Button use="primary" size="medium" onClick={onCalcEquipment}>
+                  Рассчитать
+               </Button>
             </div>
          </>
       );
@@ -178,10 +183,11 @@ export const BoilerShopRgc = () => {
       <section className={styles.optimalEquipment}>
          <div className={styles.headerWrapper}>
             <h2 className={styles.title}>Оптимальный состав оборудования</h2>
-            <div className={styles.subtitle}>Выберите оборудование, которое есть у вас в наличии</div>
+            <div className={styles.subtitle}>
+               Выберите оборудование, которое есть у вас в наличии
+            </div>
          </div>
          {renderContent()}
       </section>
    );
 };
-

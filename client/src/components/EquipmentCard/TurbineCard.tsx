@@ -1,24 +1,38 @@
 import { FC } from "react";
 import { Turbine } from "../BoilerShopRgc/BoilerShopRgc";
-import { BoilerIcon } from "./BoilerIcon";
 import styles from "./boilerCard.module.css";
+import { Button } from "@skbkontur/react-ui";
+import { TurbineIcon } from "../TurbineShopRgc/TurbineIcon";
+import { FuelConsumptionTable } from "../FuelConsumptionTable/FuelConsumptionTable";
+import { SteamConsumption } from "../../types/types";
 
 interface Props {
    selected?: boolean;
    turbine: Turbine;
    onAddTurbine?: (number: number) => void;
    onDeleteTurbine?: (number: number) => void;
+   onSubmit?: (station_number: number, steamConsumption: SteamConsumption) => void;
 }
 
-export const TurbineCard: FC<Props> = ({ turbine, selected, onAddTurbine, onDeleteTurbine }) => {
+export const TurbineCard: FC<Props> = ({
+   turbine,
+   selected,
+   onAddTurbine,
+   onDeleteTurbine,
+   onSubmit,
+}) => {
    const { station_number, mark, electricity_power, power_generation, thermal_power } = turbine;
 
    const renderSelectBtn = () => {
       if (onAddTurbine && onDeleteTurbine) {
          return selected ? (
-            <button onClick={() => onDeleteTurbine(station_number)}>Удалить</button>
+            <Button use="primary" size="medium" onClick={() => onDeleteTurbine(station_number)}>
+               Удалить
+            </Button>
          ) : (
-            <button onClick={() => onAddTurbine(station_number)}>Добавить</button>
+            <Button use="primary" size="medium" onClick={() => onAddTurbine(station_number)}>
+               Добавить
+            </Button>
          );
       }
 
@@ -27,17 +41,35 @@ export const TurbineCard: FC<Props> = ({ turbine, selected, onAddTurbine, onDele
 
    return (
       <div className={styles.cardWrapper}>
-         <BoilerIcon />
-         <div>
-            <div className={styles.cardHeader}>
-               <h3>Турбина. Станционный номер: ТГ{station_number}</h3>
-               {renderSelectBtn()}
+         <div className={styles.cardDescr}>
+            <TurbineIcon />
+            <div>
+               <h3 className={styles.cardTitle}>Турбина. Станционный номер: ТГ{station_number}</h3>
+               <div className={styles.charWrapper}>
+                  Марка турбины: <span className={styles.charValue}>{mark}</span>
+               </div>
+               <div className={styles.charWrapper}>
+                  Установленная электрическая мощность:{" "}
+                  <span className={styles.charValue}>{electricity_power} т/ч</span>
+               </div>
+               <div className={styles.charWrapper}>
+                  Тепловая мощность, Гкал/ час{" "}
+                  <span className={styles.charValue}>{power_generation}</span>
+               </div>
+               <div className={styles.charWrapper}>
+                  Выработка электроэнергии в отчетном году кВтч{" "}
+                  <span className={styles.charValue}>{thermal_power}</span>
+               </div>
             </div>
-            <div>Марка турбины: {mark}</div>
-            <div>Установленная электрическая мощность: {electricity_power} т/ч</div>
-            <div>Тепловая мощность, Гкал/ час {power_generation}</div>
-            <div>Выработка электроэнергии в отчетном году кВтч {thermal_power}</div>
          </div>
+         <div className={styles.cardFooter}>{renderSelectBtn()}</div>
+         {selected && onSubmit && (
+            <FuelConsumptionTable
+               onSubmit={(values: number[]) => {
+                  onSubmit(station_number, {turbine_mark: mark, steam_consumption: values});
+               }}
+            />
+         )}
       </div>
    );
 };

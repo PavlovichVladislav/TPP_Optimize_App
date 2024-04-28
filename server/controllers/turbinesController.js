@@ -1,7 +1,8 @@
 const TurbinesApi = require("../Api/TurbinesApi")
 const ApiError = require("../error/ApiError")
 const { Turbine } = require("../models/models")
-
+const transformFlowChar = require('../utils/transformFlowChar');
+const transformHop = require('../utils/transformHop');
 
 class TurbinesController {
     /**
@@ -80,18 +81,14 @@ class TurbinesController {
     */
     async calcTurbineShopRGC(req, res, next) {
         try {
-            const { turbinesData } = req.body;
+            const { turbinesData, season } = req.body;
 
-            const summerRGC = await TurbinesApi.calcTurbinesShopRGC(turbinesData, 'summer');
-            const winterRGC = await TurbinesApi.calcTurbinesShopRGC(turbinesData, 'winter')
-            const offSeasonRGC = await TurbinesApi.calcTurbinesShopRGC(turbinesData, 'offSeason')
-    
-            return res.json({
-                summerRGC,
-                winterRGC,
-                offSeasonRGC
-            })
-        } catch(e) {
+            const rgc = await TurbinesApi.calcTurbinesShopRGC(turbinesData, season);
+            const flow_char = transformFlowChar(rgc.flow_char);
+            const turbines_shop_hop = transformHop(rgc.turbines_shop_hop);
+
+            return res.json({flow_char, turbines_shop_hop})
+        } catch(e) {    
             next(new ApiError(500, e.message))
         }
     }
