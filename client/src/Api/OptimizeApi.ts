@@ -56,7 +56,7 @@ class OptimizeApi {
          turbinesInventory
       );
 
-      return { turbineShopRgc };
+      return turbineShopRgc;
    }
 }
 

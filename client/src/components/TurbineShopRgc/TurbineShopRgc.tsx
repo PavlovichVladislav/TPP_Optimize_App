@@ -20,20 +20,20 @@ export interface EquipmentInvenotry {
 }
 
 export interface OptimalTurbinesInventory {
-   offSeasonTurbines: Turbine[];
-   summerTurbines: Turbine[];
-   winterTurbines: Turbine[];
+   offSeasonTurbines?: Turbine[];
+   summerTurbines?: Turbine[];
+   winterTurbines?: Turbine[];
 }
 
 export interface TurbineShopRgc {
    flow_char: {
-      x: number[]
-      y: number[]
-   },
+      x: number[];
+      y: number[];
+   };
    turbines_shop_hop: {
-      x: number[]
-      y: number[]
-   }
+      x: number[];
+      y: number[];
+   };
 }
 
 export const TurbineShopRgc = () => {
@@ -46,6 +46,8 @@ export const TurbineShopRgc = () => {
    const [steamConsumptions, setSteamConsumptions] = useState<SteamConsumption[]>([]);
 
    const [summerRgc, setSummerRgc] = useState<TurbineShopRgc | undefined>();
+   const [winterRgc, setWinterRgc] = useState<TurbineShopRgc | undefined>();
+   const [offSeaasonRgc, setOffSeasonRgc] = useState<TurbineShopRgc | undefined>();
 
    const getTurbines = async () => {
       const { turbines } = await optimizeApi.getTurbines();
@@ -76,66 +78,96 @@ export const TurbineShopRgc = () => {
 
    const onCalcTurbineShopRgc = async () => {
       if (optimalTurbines) {
-         const summerTurbinesData: SteamConsumption[] = optimalTurbines.summerTurbines.map(
-            (turbine) => steamConsumptions[turbine.station_number]
-         );
+         if (optimalTurbines.summerTurbines) {
+            const summerTurbinesData: SteamConsumption[] = optimalTurbines.summerTurbines.map(
+               (turbine) => steamConsumptions[turbine.station_number]
+            );
 
-         const winterTurbinesData: SteamConsumption[] = optimalTurbines.winterTurbines.map(
-            (turbine) => steamConsumptions[turbine.station_number]
-         );
+            const summerShopRgc = await optimizeApi.calcTurbinesShopRGC({
+               season: "summer",
+               turbinesData: summerTurbinesData,
+            });
 
-         const offSeasonTurbinesData: SteamConsumption[] = optimalTurbines.offSeasonTurbines.map(
-            (turbine) => steamConsumptions[turbine.station_number]
-         );
-   
-         const { turbineShopRgc } = await optimizeApi.calcTurbinesShopRGC({
-            season: "summer",
-            turbinesData: summerTurbinesData
-         });
+            setSummerRgc(summerShopRgc);
+         }
 
-         const winterShopRgc = await optimizeApi.calcTurbinesShopRGC({
-            season: "winter",
-            turbinesData: winterTurbinesData
-         });
+         if (optimalTurbines.winterTurbines) {
+            const winterTurbinesData: SteamConsumption[] = optimalTurbines.winterTurbines.map(
+               (turbine) => steamConsumptions[turbine.station_number]
+            );
 
-         const offSeasonShopRgc = await optimizeApi.calcTurbinesShopRGC({
-            season: "offSeason",
-            turbinesData: offSeasonTurbinesData
-         });
-   
-         console.log(turbineShopRgc);
-         console.log(winterShopRgc);
-         console.log(offSeasonShopRgc);
+            const winterShopRgc = await optimizeApi.calcTurbinesShopRGC({
+               season: "winter",
+               turbinesData: winterTurbinesData,
+            });
 
-         setSummerRgc(turbineShopRgc)
+            setWinterRgc(winterShopRgc);
+         }
+
+         if (optimalTurbines.offSeasonTurbines) {
+            const offSeasonTurbinesData: SteamConsumption[] = optimalTurbines.offSeasonTurbines.map(
+               (turbine) => steamConsumptions[turbine.station_number]
+            );
+
+            const offSeasonShopRgc = await optimizeApi.calcTurbinesShopRGC({
+               season: "offSeason",
+               turbinesData: offSeasonTurbinesData,
+            });
+
+            setOffSeasonRgc(offSeasonShopRgc);
+         }
       }
    };
 
    const renderContent = () => {
-        if (summerRgc) {
-           return (
-              <>
-                 <Table
-                    firstRow={summerRgc.flow_char.x}
-                    secondRow={summerRgc.flow_char.y}
-                    title="Лето. Расходная характеристика"
-                 />
-                  <Table
-                    firstRow={summerRgc.turbines_shop_hop.x}
-                    secondRow={summerRgc.turbines_shop_hop.y}
-                    title="Лето. ХОП турбинного цеха"
-                 />
-                 {/*
-                 <Graph
-                    xData={boilerShopRgc.summerBoilerShopRGC.Q}
-                    yData={boilerShopRgc.summerBoilerShopRGC.b}
-                    graphTitle="Хоп"
-                    xAxisLabel="Q"
-                    yAxisLabel="b"
-                 /> */}
-              </>
-           );
-        }
+      if (summerRgc || winterRgc || offSeaasonRgc) {
+         return (
+            <>
+               {summerRgc && (
+                  <>
+                     <Table
+                        firstRow={summerRgc.flow_char.x}
+                        secondRow={summerRgc.flow_char.y}
+                        title="Лето. Расходная характеристика"
+                     />
+                     <Table
+                        firstRow={summerRgc.turbines_shop_hop.x}
+                        secondRow={summerRgc.turbines_shop_hop.y}
+                        title="Лето. ХОП турбинного цеха"
+                     />
+                  </>
+               )}
+               {winterRgc && (
+                  <>
+                     <Table
+                        firstRow={winterRgc.flow_char.x}
+                        secondRow={winterRgc.flow_char.y}
+                        title="Зима. Расходная характеристика"
+                     />
+                     <Table
+                        firstRow={winterRgc.turbines_shop_hop.x}
+                        secondRow={winterRgc.turbines_shop_hop.y}
+                        title="Зима. ХОП турбинного цеха"
+                     />
+                  </>
+               )}
+               {offSeaasonRgc && (
+                  <>
+                     <Table
+                        firstRow={offSeaasonRgc.flow_char.x}
+                        secondRow={offSeaasonRgc.flow_char.y}
+                        title="Межсезонье. Расходная характеристика"
+                     />
+                     <Table
+                        firstRow={offSeaasonRgc.turbines_shop_hop.x}
+                        secondRow={offSeaasonRgc.turbines_shop_hop.y}
+                        title="Межсезонье. ХОП турбинного цеха"
+                     />
+                  </>
+               )}
+            </>
+         );
+      }
 
       if (optimalTurbines) {
          return (
@@ -186,8 +218,6 @@ export const TurbineShopRgc = () => {
          setSteamConsumptions(transformedConsumptions);
       };
 
-      console.log(steamConsumptions);
-
       return (
          <>
             <div className={styles.equipmentWrapper}>
@@ -225,4 +255,3 @@ export const TurbineShopRgc = () => {
       </section>
    );
 };
-
