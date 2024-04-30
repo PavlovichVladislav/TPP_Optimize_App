@@ -3,8 +3,10 @@ import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
 import { BoilerCard } from "../EquipmentCard/BoilerCard";
 import { Table } from "../Table/Table";
-import { Boiler, OptimalBoilersInventory } from "../../types/types";
+import { OptimalBoilersInventory } from "../../types/types";
 import { Button } from "@skbkontur/react-ui";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { addInventoryBoiler, deleteInventoryBoiler, setBoilers } from "../../store/reducers/BoilersSlice";
 
 export interface Turbine {
    station_number: number;
@@ -37,38 +39,39 @@ export interface BoilerShopRgc {
 }
 
 export const BoilerShopRgc = () => {
-   // to:do в redux
-   const [boilers, setBoilers] = useState<Boiler[]>([]);
+   const { boilers, inventoryBoilerNumbers } = useAppSelector(state => state.boilerReducer);
+
+   const dispatch = useAppDispatch();
    const optimizeApi = new OptimizeApi();
-   // to:do в redux
-   const [boilerNumbers, setBoilerNumbers] = useState<number[]>([]);
+
    // to:do в redux
    const [optimalBoilers, setOptimalBoilers] = useState<OptimalBoilersInventory | undefined>(
       undefined
    );
    const [boilerShopRgc, setBoilerShopRgc] = useState<BoilerShopRgc | undefined>(undefined);
 
+   // Получаем список оборудования
    const getEquipment = async () => {
       const { boilers } = await optimizeApi.getBoilers();
 
-      setBoilers(boilers);
-      // setTurbines(turbines);
+      dispatch(setBoilers(boilers));
    };
 
+   // Получаем список оборудования при первой отрисовке компонента
    useEffect(() => {
       getEquipment();
    }, []);
 
    const addBoiler = (number: number) => {
-      setBoilerNumbers([...boilerNumbers, number]);
+      dispatch(addInventoryBoiler(number));
    };
 
    const deleteBoiler = (number: number) => {
-      setBoilerNumbers(boilerNumbers.filter((boilerNumber) => boilerNumber !== number));
+      dispatch(deleteInventoryBoiler(number));
    };
 
    const onCalcEquipment = async () => {
-      const { optimalBoilers } = await optimizeApi.calcOptimaBoilers(boilerNumbers);
+      const { optimalBoilers } = await optimizeApi.calcOptimaBoilers(inventoryBoilerNumbers);
 
       setOptimalBoilers(optimalBoilers);
    };
@@ -162,7 +165,7 @@ export const BoilerShopRgc = () => {
                   {boilers.map((boiler) => (
                      <BoilerCard
                         key={boiler.station_number}
-                        selected={boilerNumbers.includes(boiler.station_number)}
+                        selected={inventoryBoilerNumbers.includes(boiler.station_number)}
                         boiler={boiler}
                         onAddBoiler={addBoiler}
                         onDeleteBoiler={deleteBoiler}

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { OptimalBoilersInventory, OptimalTurbinesInventory } from "../types/types";
 import { TurbineShopRgc } from "../components/TurbineShopRgc/TurbineShopRgc";
+import { IBoiler } from "../types/redux";
 
 class OptimizeApi {
    // constructor() {
@@ -9,8 +10,13 @@ class OptimizeApi {
    //     })
    // }
 
+   /**
+    * Функция для получения списка котельного обоудования
+    * 
+    * @returns boilers - список котельного оборудования типа IBoiler
+    */
    async getBoilers() {
-      const { data: boilers } = await axios.get("http://localhost:4001/api/boilers");
+      const { data: boilers } = await axios.get<IBoiler[]>("http://localhost:4001/api/boilers");
 
       return { boilers };
    }

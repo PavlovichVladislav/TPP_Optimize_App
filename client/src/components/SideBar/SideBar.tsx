@@ -20,6 +20,9 @@ export const SideBar = () => {
          <NavLink className={getStyles} to="/turbines">
             ХОП турбинного цеха
          </NavLink>
+         <NavLink className={getStyles} to="/station-rgc">
+            ХОП станции
+         </NavLink>
          {/* </ul> */}
       </section>
    );
