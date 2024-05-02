@@ -1,9 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IBoiler } from "../../types/redux";
+import { BoilerShopRgc, OptimalBoilersInventory } from "../../types/types";
 
 interface BoilersState {
    boilers: IBoiler[];
    inventoryBoilerNumbers: number[];
+   optimalBoilers?: OptimalBoilersInventory;
+   boilerShopRgc?: BoilerShopRgc;
    isLoading: boolean;
    error: string;
 }
@@ -11,6 +14,8 @@ interface BoilersState {
 const initialState: BoilersState = {
    boilers: [],
    inventoryBoilerNumbers: [],
+   optimalBoilers: undefined,
+   boilerShopRgc: undefined,
    isLoading: false,
    error: "",
 };
@@ -30,9 +35,21 @@ export const boilerSlice = createSlice({
             (boilerNumber) => boilerNumber !== action.payload
          );
       },
+      setOptimalBoilersInventory: (state, action: PayloadAction<OptimalBoilersInventory>) => {
+         state.optimalBoilers = action.payload;
+      },
+      setBoilerShopRgc: (state, action: PayloadAction<BoilerShopRgc>) => {
+         state.boilerShopRgc = action.payload;
+      },
    },
 });
 
-export const { setBoilers, addInventoryBoiler, deleteInventoryBoiler } = boilerSlice.actions;
+export const {
+   setBoilers,
+   addInventoryBoiler,
+   deleteInventoryBoiler,
+   setOptimalBoilersInventory,
+   setBoilerShopRgc,
+} = boilerSlice.actions;
 
 export default boilerSlice.reducer;

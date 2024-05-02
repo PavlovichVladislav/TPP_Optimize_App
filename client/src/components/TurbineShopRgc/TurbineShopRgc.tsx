@@ -1,58 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
 import { Button } from "@skbkontur/react-ui";
 import { TurbineCard } from "../EquipmentCard/TurbineCard";
 import { SteamConsumption } from "../../types/types";
 import { Table } from "../Table/Table";
-
-export interface Turbine {
-   station_number: number;
-   mark: string;
-   electricity_power: number;
-   thermal_power: number;
-   power_generation: number;
-}
-
-export interface EquipmentInvenotry {
-   boilerNumbers: number[];
-   turbines: number[];
-}
-
-export interface OptimalTurbinesInventory {
-   offSeasonTurbines?: Turbine[];
-   summerTurbines?: Turbine[];
-   winterTurbines?: Turbine[];
-}
-
-export interface TurbineShopRgc {
-   flow_char: {
-      x: number[];
-      y: number[];
-   };
-   turbines_shop_hop: {
-      x: number[];
-      y: number[];
-   };
-}
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { addInventoryTurbine, deleteInventoryTurbine, setOffSeasonRgc, setOptimalTurbinesInventory, setSteamConsumptions, setSummerRgc, setTurbines, setWinterRgc } from "../../store/reducers/TurbineSlice";
 
 export const TurbineShopRgc = () => {
-   const [turbines, setTurbines] = useState<Turbine[]>([]);
-   const [turbineNumbers, setTurbineNumbers] = useState<number[]>([]);
-   const [optimalTurbines, setOptimalTurbines] = useState<OptimalTurbinesInventory | undefined>(
-      undefined
-   );
-   const optimizeApi = new OptimizeApi();
-   const [steamConsumptions, setSteamConsumptions] = useState<SteamConsumption[]>([]);
+   const {
+      inventoryTurbineNumbers,
+      turbines,
+      optimalTurbines,
+      steamConsumptions,
+      summerRgc,
+      winterRgc,
+      offSeaasonRgc,
+   } = useAppSelector((state) => state.turbineReducer);
 
-   const [summerRgc, setSummerRgc] = useState<TurbineShopRgc | undefined>();
-   const [winterRgc, setWinterRgc] = useState<TurbineShopRgc | undefined>();
-   const [offSeaasonRgc, setOffSeasonRgc] = useState<TurbineShopRgc | undefined>();
+   const optimizeApi = new OptimizeApi();
+   const dispatch = useAppDispatch();
 
    const getTurbines = async () => {
       const { turbines } = await optimizeApi.getTurbines();
 
-      setTurbines(turbines);
+      dispatch(setTurbines(turbines));
    };
 
    useEffect(() => {
@@ -60,20 +33,17 @@ export const TurbineShopRgc = () => {
    }, []);
 
    const addTurbine = (number: number) => {
-      console.log(number);
-      console.log("add");
-
-      setTurbineNumbers([...turbineNumbers, number]);
+      dispatch(addInventoryTurbine(number));
    };
 
    const deleteTurbine = (number: number) => {
-      setTurbineNumbers(turbineNumbers.filter((turbineNumber) => turbineNumber !== number));
+      dispatch(deleteInventoryTurbine(number));
    };
 
    const onCalcEquipment = async () => {
-      const { optimalTurbines } = await optimizeApi.calcOptimaTurbines(turbineNumbers);
+      const optimalTurbines = await optimizeApi.calcOptimaTurbines(inventoryTurbineNumbers);
 
-      setOptimalTurbines(optimalTurbines);
+      dispatch(setOptimalTurbinesInventory(optimalTurbines));
    };
 
    const onCalcTurbineShopRgc = async () => {
@@ -88,7 +58,7 @@ export const TurbineShopRgc = () => {
                turbinesData: summerTurbinesData,
             });
 
-            setSummerRgc(summerShopRgc);
+            dispatch(setSummerRgc(summerShopRgc));
          }
 
          if (optimalTurbines.winterTurbines) {
@@ -101,7 +71,7 @@ export const TurbineShopRgc = () => {
                turbinesData: winterTurbinesData,
             });
 
-            setWinterRgc(winterShopRgc);
+            dispatch(setWinterRgc(winterShopRgc));
          }
 
          if (optimalTurbines.offSeasonTurbines) {
@@ -114,7 +84,7 @@ export const TurbineShopRgc = () => {
                turbinesData: offSeasonTurbinesData,
             });
 
-            setOffSeasonRgc(offSeasonShopRgc);
+            dispatch(setOffSeasonRgc(offSeasonShopRgc));
          }
       }
    };
@@ -212,10 +182,11 @@ export const TurbineShopRgc = () => {
       }
 
       const onSubmit = (station_number: number, steamConsumption: SteamConsumption) => {
-         const transformedConsumptions: SteamConsumption[] = steamConsumptions;
+         const transformedConsumptions: SteamConsumption[] = [...steamConsumptions];
+
          transformedConsumptions[station_number] = steamConsumption;
 
-         setSteamConsumptions(transformedConsumptions);
+         dispatch(setSteamConsumptions(transformedConsumptions));
       };
 
       return (
@@ -225,7 +196,7 @@ export const TurbineShopRgc = () => {
                   {turbines.map((turbine) => (
                      <TurbineCard
                         key={turbine.station_number}
-                        selected={turbineNumbers.includes(turbine.station_number)}
+                        selected={inventoryTurbineNumbers.includes(turbine.station_number)}
                         turbine={turbine}
                         onAddTurbine={addTurbine}
                         onDeleteTurbine={deleteTurbine}

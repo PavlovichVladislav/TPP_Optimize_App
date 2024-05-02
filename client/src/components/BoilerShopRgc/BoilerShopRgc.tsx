@@ -1,54 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
 import { BoilerCard } from "../EquipmentCard/BoilerCard";
 import { Table } from "../Table/Table";
-import { OptimalBoilersInventory } from "../../types/types";
 import { Button } from "@skbkontur/react-ui";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { addInventoryBoiler, deleteInventoryBoiler, setBoilers } from "../../store/reducers/BoilersSlice";
-
-export interface Turbine {
-   station_number: number;
-   mark: string;
-   electricity_power: number;
-   thermal_power: number;
-   power_generation: number;
-}
-
-export interface EquipmentInvenotry {
-   boilerNumbers: number[];
-   turbines: number[];
-}
-
-export interface OptimalTurbinesInventory {
-   offSeasonTurbines: Turbine[];
-   summerTurbines: Turbine[];
-   winterTurbines: Turbine[];
-}
-
-export interface BoilerRgc {
-   Q: number[];
-   b: number[];
-}
-
-export interface BoilerShopRgc {
-   offSeasonBoilerShopRGC: BoilerRgc;
-   summerBoilerShopRGC: BoilerRgc;
-   winterBoilerShopRGC: BoilerRgc;
-}
+import {
+   addInventoryBoiler,
+   deleteInventoryBoiler,
+   setBoilerShopRgc,
+   setBoilers,
+   setOptimalBoilersInventory,
+} from "../../store/reducers/BoilersSlice";
 
 export const BoilerShopRgc = () => {
-   const { boilers, inventoryBoilerNumbers } = useAppSelector(state => state.boilerReducer);
-
+   const { boilers, inventoryBoilerNumbers, optimalBoilers, boilerShopRgc } = useAppSelector(
+      (state) => state.boilerReducer
+   );
    const dispatch = useAppDispatch();
    const optimizeApi = new OptimizeApi();
-
-   // to:do в redux
-   const [optimalBoilers, setOptimalBoilers] = useState<OptimalBoilersInventory | undefined>(
-      undefined
-   );
-   const [boilerShopRgc, setBoilerShopRgc] = useState<BoilerShopRgc | undefined>(undefined);
 
    // Получаем список оборудования
    const getEquipment = async () => {
@@ -71,15 +41,15 @@ export const BoilerShopRgc = () => {
    };
 
    const onCalcEquipment = async () => {
-      const { optimalBoilers } = await optimizeApi.calcOptimaBoilers(inventoryBoilerNumbers);
+      const optimalBoilers = await optimizeApi.calcOptimaBoilers(inventoryBoilerNumbers);
 
-      setOptimalBoilers(optimalBoilers);
+      dispatch(setOptimalBoilersInventory(optimalBoilers));
    };
 
    const calcBoilerShopRGC = async () => {
       const { boilerShopRgc } = await optimizeApi.calcBoilerShopRGC(optimalBoilers!);
 
-      setBoilerShopRgc(boilerShopRgc);
+      dispatch(setBoilerShopRgc(boilerShopRgc));
    };
 
    const renderContent = () => {

@@ -1,7 +1,6 @@
 import axios from "axios";
-import { OptimalBoilersInventory, OptimalTurbinesInventory } from "../types/types";
-import { TurbineShopRgc } from "../components/TurbineShopRgc/TurbineShopRgc";
-import { IBoiler } from "../types/redux";
+import { OptimalBoilersInventory, OptimalTurbinesData } from "../types/types";
+import { IBoiler, OptimalTurbinesInventory, TurbineShopRgc } from "../types/redux";
 
 class OptimizeApi {
    // constructor() {
@@ -28,23 +27,23 @@ class OptimizeApi {
    }
 
    async calcOptimaBoilers(boilerNumbers: number[]) {
-      const { data: optimalBoilers } = await axios.post(
+      const { data: optimalBoilers } = await axios.post<OptimalBoilersInventory>(
          "http://localhost:4001/api/boilers/optimal",
          {
             boilerNumbers,
          }
       );
 
-      return { optimalBoilers };
+      return optimalBoilers;
    }
 
    async calcOptimaTurbines(turbineNumbers: number[]) {
-      const { data: optimalTurbines } = await axios.post(
+      const { data: optimalTurbines } = await axios.post<OptimalTurbinesInventory>(
          "http://localhost:4001/api/turbines/optimal",
          { turbineNumbers }
       );
 
-      return { optimalTurbines };
+      return optimalTurbines;
    }
 
    async calcBoilerShopRGC(boilersInventory: OptimalBoilersInventory) {
@@ -56,7 +55,7 @@ class OptimizeApi {
       return { boilerShopRgc };
    }
 
-   async calcTurbinesShopRGC(turbinesInventory: OptimalTurbinesInventory) {
+   async calcTurbinesShopRGC(turbinesInventory: OptimalTurbinesData) {
       const { data: turbineShopRgc } = await axios.post<TurbineShopRgc>(
          "http://localhost:4001/api/turbines/shop-rgc",
          turbinesInventory

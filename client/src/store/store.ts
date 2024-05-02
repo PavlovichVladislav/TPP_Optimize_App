@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import boilerReducer from './reducers/BoilersSlice';
+import turbineReducer from './reducers/TurbineSlice';
 
 const rootReducer = combineReducers({
-    boilerReducer
+    boilerReducer,
+    turbineReducer
 })
 
 export const store = configureStore({

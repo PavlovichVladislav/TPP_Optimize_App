@@ -1,14 +1,14 @@
 import { FC } from "react";
-import { Turbine } from "../BoilerShopRgc/BoilerShopRgc";
 import styles from "./boilerCard.module.css";
 import { Button } from "@skbkontur/react-ui";
 import { TurbineIcon } from "../TurbineShopRgc/TurbineIcon";
 import { FuelConsumptionTable } from "../FuelConsumptionTable/FuelConsumptionTable";
 import { SteamConsumption } from "../../types/types";
+import { ITurbine } from "../../types/redux";
 
 interface Props {
    selected?: boolean;
-   turbine: Turbine;
+   turbine: ITurbine;
    onAddTurbine?: (number: number) => void;
    onDeleteTurbine?: (number: number) => void;
    onSubmit?: (station_number: number, steamConsumption: SteamConsumption) => void;
