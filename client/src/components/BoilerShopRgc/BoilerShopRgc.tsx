@@ -98,11 +98,11 @@ export const BoilerShopRgc = () => {
                         </div>
                      </div>
                   )}
-                  {optimalBoilers?.offSeasonBoilers && (
+                  {optimalBoilers?.winterBoilers && (
                      <div>
-                        <h2>Межсезонье </h2>
+                        <h2>Зима </h2>
                         <div>
-                           {optimalBoilers.summerBoilers.map((boiler) => (
+                           {optimalBoilers.winterBoilers.map((boiler) => (
                               <BoilerCard key={boiler.station_number} boiler={boiler} />
                            ))}
                         </div>
@@ -110,9 +110,9 @@ export const BoilerShopRgc = () => {
                   )}
                   {optimalBoilers?.offSeasonBoilers && (
                      <div>
-                        <h2>Зима </h2>
+                        <h2>Межсезонье </h2>
                         <div>
-                           {optimalBoilers.summerBoilers.map((boiler) => (
+                           {optimalBoilers.offSeasonBoilers.map((boiler) => (
                               <BoilerCard key={boiler.station_number} boiler={boiler} />
                            ))}
                         </div>
