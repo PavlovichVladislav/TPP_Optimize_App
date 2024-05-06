@@ -9,7 +9,7 @@ interface TurbinesState {
    steamConsumptions: SteamConsumption[];
    summerRgc?: TurbineShopRgc;
    winterRgc?: TurbineShopRgc;
-   offSeaasonRgc?: TurbineShopRgc;
+   offSeasonRgc?: TurbineShopRgc;
    isLoading: boolean;
    error: string;
 }
@@ -21,7 +21,7 @@ const initialState: TurbinesState = {
    optimalTurbines: undefined,
    summerRgc: undefined,
    winterRgc: undefined,
-   offSeaasonRgc: undefined,
+   offSeasonRgc: undefined,
    isLoading: false,
    error: "",
 };
@@ -54,7 +54,7 @@ export const turbineSlice = createSlice({
          state.winterRgc = action.payload;
       },
       setOffSeasonRgc: (state, action: PayloadAction<TurbineShopRgc>) => {
-         state.offSeaasonRgc = action.payload;
+         state.offSeasonRgc = action.payload;
       },
    },
 });

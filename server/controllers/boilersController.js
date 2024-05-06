@@ -74,9 +74,6 @@ class BoilersController {
     async calcBoilerShopRGC(req, res) {
         const boilersInventory = req.body;
 
-        console.log('--------')
-        console.log(boilersInventory)
-
         function countBoilers(boilers) {
             let summerBoilers = {};
             let winterBoilers = {};
@@ -104,8 +101,6 @@ class BoilersController {
 
         const { summerBoilers, winterBoilers, offSeasonBoilers } = countBoilers(boilersInventory);
         
-        console.log(summerBoilers, winterBoilers, offSeasonBoilers)
-
         const calcBoilerRgcPerSeason = async (boilersInventory) => {
             const boilersRGCArr = [];
 
@@ -133,10 +128,6 @@ class BoilersController {
         const summerBoilerShopRGC = await calcBoilerRgcPerSeason(summerBoilers);
         const winterBoilerShopRGC = await calcBoilerRgcPerSeason(winterBoilers);
         const offSeasonBoilerShopRGC = await calcBoilerRgcPerSeason(offSeasonBoilers);
-
-        console.log(summerBoilerShopRGC)
-        console.log(winterBoilerShopRGC)
-        console.log(offSeasonBoilerShopRGC)
 
         return res.json({summerBoilerShopRGC, winterBoilerShopRGC, offSeasonBoilerShopRGC});
     }

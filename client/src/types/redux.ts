@@ -19,13 +19,22 @@ export interface OptimalTurbinesInventory {
    winterTurbines?: ITurbine[];
 }
 
+export interface FlowChar {
+   x: number[];
+   y: number[];
+}
+
+export interface TurbineShopHop {
+   x: number[];
+   y: number[];
+}
+
 export interface TurbineShopRgc {
-    flow_char: {
-       x: number[];
-       y: number[];
-    };
-    turbines_shop_hop: {
-       x: number[];
-       y: number[];
-    };
- }
+   flow_char: FlowChar;
+   turbines_shop_hop: TurbineShopHop;
+}
+
+export interface StationRgc {
+   N: number[],
+   b: number[]
+}

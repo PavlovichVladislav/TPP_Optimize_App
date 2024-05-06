@@ -1,11 +1,11 @@
 import axios from "axios";
 import { BoilerRgc, OptimalBoilersInventory, OptimalTurbinesData } from "../types/types";
-import { IBoiler, OptimalTurbinesInventory, TurbineShopRgc } from "../types/redux";
+import { FlowChar, IBoiler, OptimalTurbinesInventory, TurbineShopHop, TurbineShopRgc } from "../types/redux";
 
 interface DataForCalcStationRGC {
-   turbineShopRGC: TurbineShopRgc
+   turbineShopRGC: TurbineShopHop
    boilersShopRGC: BoilerRgc
-   shopFlowChar: undefined;
+   shopFlowChar: FlowChar;
 }
 
 class OptimizeApi {
@@ -71,14 +71,12 @@ class OptimizeApi {
    }
 
    async calcStationRGC(stationRGCData: DataForCalcStationRGC ) {
-      const { data: turbineShopRgc } = await axios.post<TurbineShopRgc>(
-         "http://localhost:4001/api/turbines/shop-rgc",
-         {
-            stationRGCData
-         }
+      const { data: stationRgc } = await axios.post(
+         "http://localhost:4001/api/station/rgc",
+         stationRGCData
       );
 
-      return turbineShopRgc;
+      return stationRgc;
    }
 }
 
