@@ -2,7 +2,7 @@ import { FC } from "react";
 import styles from "./boilerCard.module.css";
 import { Button } from "@skbkontur/react-ui";
 import { TurbineIcon } from "../TurbineShopRgc/TurbineIcon";
-import { FuelConsumptionTable } from "../FuelConsumptionTable/FuelConsumptionTable";
+import { InputTable } from "../InputTable/InputTable";
 import { SteamConsumption } from "../../types/types";
 import { ITurbine } from "../../types/redux";
 
@@ -64,7 +64,7 @@ export const TurbineCard: FC<Props> = ({
          </div>
          <div className={styles.cardFooter}>{renderSelectBtn()}</div>
          {selected && onSubmit && (
-            <FuelConsumptionTable
+            <InputTable
                onSubmit={(values: number[]) => {
                   onSubmit(station_number, {turbine_mark: mark, steam_consumption: values});
                }}

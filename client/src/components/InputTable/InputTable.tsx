@@ -4,10 +4,11 @@ import { Button } from "@skbkontur/react-ui";
 
 interface Props {
    onSubmit: (number: number[]) => void;
+   size?: number
 }
 
-export const FuelConsumptionTable: FC<Props> = ({ onSubmit }) => {
-   const [values, setValues] = useState(Array(12).fill(""));
+export const InputTable: FC<Props> = ({ onSubmit, size = 12 }) => {
+   const [values, setValues] = useState(Array(size).fill(""));
 
    const handleChange = (index: number, event: ChangeEvent<HTMLInputElement>) => {
       const newValues = [...values];
@@ -15,8 +16,10 @@ export const FuelConsumptionTable: FC<Props> = ({ onSubmit }) => {
       setValues(newValues);
    };
 
+   console.log(size);
+
    const handleSubmit = () => {
-        const values = [27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27];
+      const values = new Array(size).fill(27);
 
       onSubmit(values);
    };
@@ -26,7 +29,7 @@ export const FuelConsumptionTable: FC<Props> = ({ onSubmit }) => {
          <table className={styles.table}>
             <thead className={styles.header}>
                <tr className={styles.row}>
-                  {[...Array(6).keys()].map((index) => (
+                  {[...Array(size / 2).keys()].map((index) => (
                      <th key={index}>dd.0{index + 1}.yy</th>
                   ))}
                </tr>
@@ -34,7 +37,7 @@ export const FuelConsumptionTable: FC<Props> = ({ onSubmit }) => {
             <tbody>
                <tr className={styles.row}>
                   {values.map((value, index) => {
-                     if (index > 5) return null;
+                     if (index > size / 2 - 1) return null;
 
                      return (
                         <td className={styles.cell} key={index}>
@@ -53,8 +56,8 @@ export const FuelConsumptionTable: FC<Props> = ({ onSubmit }) => {
          <table className={styles.table}>
             <thead className={styles.header}>
                <tr className={styles.row}>
-                  {[...Array(12).keys()].map((index) => {
-                     if (index < 6) return null;
+                  {[...Array(size).keys()].map((index) => {
+                     if (index < size /2 ) return null;
 
                      return <th key={index}>dd.0{index + 1}.yy</th>;
                   })}
@@ -63,7 +66,7 @@ export const FuelConsumptionTable: FC<Props> = ({ onSubmit }) => {
             <tbody>
                <tr className={styles.row}>
                   {values.map((value, index) => {
-                     if (index < 6) return null;
+                     if (index < size / 2) return null;
 
                      return (
                         <td className={styles.cell} key={index}>

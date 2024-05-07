@@ -16,7 +16,7 @@ export const TurbineShopRgc = () => {
       steamConsumptions,
       summerRgc,
       winterRgc,
-      offSeaasonRgc,
+      offSeasonRgc,
    } = useAppSelector((state) => state.turbineReducer);
 
    const optimizeApi = new OptimizeApi();
@@ -90,7 +90,7 @@ export const TurbineShopRgc = () => {
    };
 
    const renderContent = () => {
-      if (summerRgc || winterRgc || offSeaasonRgc) {
+      if (summerRgc || winterRgc || offSeasonRgc) {
          return (
             <>
                {summerRgc && (
@@ -121,16 +121,16 @@ export const TurbineShopRgc = () => {
                      />
                   </>
                )}
-               {offSeaasonRgc && (
+               {offSeasonRgc && (
                   <>
                      <Table
-                        firstRow={offSeaasonRgc.flow_char.x}
-                        secondRow={offSeaasonRgc.flow_char.y}
+                        firstRow={offSeasonRgc.flow_char.x}
+                        secondRow={offSeasonRgc.flow_char.y}
                         title="Межсезонье. Расходная характеристика"
                      />
                      <Table
-                        firstRow={offSeaasonRgc.turbines_shop_hop.x}
-                        secondRow={offSeaasonRgc.turbines_shop_hop.y}
+                        firstRow={offSeasonRgc.turbines_shop_hop.x}
+                        secondRow={offSeasonRgc.turbines_shop_hop.y}
                         title="Межсезонье. ХОП турбинного цеха"
                      />
                   </>

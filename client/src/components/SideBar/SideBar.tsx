@@ -23,6 +23,9 @@ export const SideBar = () => {
          <NavLink className={getStyles} to="/station-rgc">
             ХОП станции
          </NavLink>
+         <NavLink className={getStyles} to="/station-optimize">
+            Оптимальный режим работцы станции
+         </NavLink>
          {/* </ul> */}
       </section>
    );
