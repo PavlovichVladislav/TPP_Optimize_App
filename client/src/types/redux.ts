@@ -35,6 +35,16 @@ export interface TurbineShopRgc {
 }
 
 export interface StationRgc {
-   N: number[],
-   b: number[]
+   N: number[];
+   b: number[];
+}
+
+export interface StationDemand {
+   pg: number[];
+   price: number[];
+}
+
+export interface StationOptimalMode {
+   zero_percent: number[];
+   up_percent: number[]
 }

@@ -16,8 +16,6 @@ export const InputTable: FC<Props> = ({ onSubmit, size = 12 }) => {
       setValues(newValues);
    };
 
-   console.log(size);
-
    const handleSubmit = () => {
       const values = new Array(size).fill(27);
 

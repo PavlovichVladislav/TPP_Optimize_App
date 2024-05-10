@@ -1,11 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { StationRgc } from "../../types/redux";
+import { StationRgc, StationDemand, StationOptimalMode } from "../../types/redux";
 
 interface StationState {
    summerStationRgc?: StationRgc;
    winterStationRgc?: StationRgc;
    offSeasonStationRgc?: StationRgc;
    fuelPrice: number[];
+   demand?: StationDemand;
+   summerOptimalMode?: StationOptimalMode;
+   winterOptimalMode?: StationOptimalMode;
+   offSeasonOptimalMode?: StationOptimalMode;
 }
 
 const initialState: StationState = {
@@ -13,6 +17,8 @@ const initialState: StationState = {
    winterStationRgc: undefined,
    offSeasonStationRgc: undefined,
    fuelPrice: [],
+   demand: undefined,
+   summerOptimalMode: undefined,
 };
 
 export const stationSlice = createSlice({
@@ -31,10 +37,30 @@ export const stationSlice = createSlice({
       setFuelPrice: (state, action: PayloadAction<number[]>) => {
          state.fuelPrice = action.payload;
       },
+      setDemand: (state, action: PayloadAction<StationDemand>) => {
+         state.demand = action.payload;
+      },
+      setSummerOptimalMode: (state, action: PayloadAction<StationOptimalMode>) => {
+         state.summerOptimalMode = action.payload;
+      },
+      setWinterOptimalMode: (state, action: PayloadAction<StationOptimalMode>) => {
+         state.winterOptimalMode = action.payload;
+      },
+      setOffSeasonOptimalMode: (state, action: PayloadAction<StationOptimalMode>) => {
+         state.offSeasonOptimalMode = action.payload;
+      },
    },
 });
 
-export const { setSummerStationRgc, setWinterStationRgc, setOffSeasonStationRgc, setFuelPrice } =
-   stationSlice.actions;
+export const {
+   setSummerStationRgc,
+   setWinterStationRgc,
+   setOffSeasonStationRgc,
+   setFuelPrice,
+   setDemand,
+   setSummerOptimalMode,
+   setWinterOptimalMode,
+   setOffSeasonOptimalMode
+} = stationSlice.actions;
 
 export default stationSlice.reducer;
