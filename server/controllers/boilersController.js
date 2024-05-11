@@ -6,10 +6,14 @@ class BoilersController {
     /**
      * Добавление нового котла в БД
     */
-    async addBoiler(req, res) {
-        const boiler = await Boiler.create(req.body)
+    async addBoiler(req, res, next) {
+        try {
+            const boiler = await Boiler.create(req.body)
 
-        return res.json({message: 'Succesful created!', boiler})
+            return res.json({message: 'Succesful created!', boiler})
+        } catch (error) {
+            next(new ApiError(500, error.message))
+        }
     }
     
     /**
@@ -26,25 +30,29 @@ class BoilersController {
      * @param req.body - массив с номерами котлов в наличии у станции 
      * @returns Возвращает комбинации котлов по сезонам года
      */
-    async getOptimalEquipment(req, res) {
-        const { boilerNumbers } = req.body;
-        const boilers = [];
-
-        // Находим котлы по их номерам 
-        for (const number of boilerNumbers) {
-            const boiler = await Boiler.findOne({
-                where: {
-                    ['station_number']: number
-                },
-                attributes: { exclude: ['createdAt', 'updatedAt'] }
-            })
-
-            boilers.push(boiler.dataValues);
+    async getOptimalEquipment(req, res, next) {
+        try {
+            const { boilerNumbers } = req.body;
+            const boilers = [];
+    
+            // Находим котлы по их номерам 
+            for (const number of boilerNumbers) {
+                const boiler = await Boiler.findOne({
+                    where: {
+                        ['station_number']: number
+                    },
+                    attributes: { exclude: ['createdAt', 'updatedAt'] }
+                })
+    
+                boilers.push(boiler.dataValues);
+            }
+    
+            const result = await BoilersApi.getOptimalEquipment(boilers)
+    
+            return res.json(result);
+        } catch (error) {
+            next(new ApiError(500, error.message))
         }
-
-        const result = await BoilersApi.getOptimalEquipment(boilers)
-
-        return res.json(result);
     }
 
     /**

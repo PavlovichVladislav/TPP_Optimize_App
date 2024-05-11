@@ -6,7 +6,7 @@ class StationApi extends BaseApi{
     }
 
     async calcStationRGC(turbineShopHop, boilersShopHop, shopFlowChar) {
-        const result = await this.axios.post('/station/station-hop', {
+        const result = await this.axios.post('/station/station-rgc', {
             turbineShopHop,
             boilersShopHop,
             shopFlowChar
@@ -15,12 +15,10 @@ class StationApi extends BaseApi{
         return result.data;
     }
 
-    async getOptimalMode(hop, fuelPirce, demand, season) {
-        console.log(hop, fuelPirce, demand, season)
-
+    async getOptimalMode(rgc, fuel_price, demand, season) {
         const result = await this.axios.post('/station/optimize', {
-            hop,
-            fuelPirce,
+            rgc,
+            fuel_price,
             demand,
             season
         })

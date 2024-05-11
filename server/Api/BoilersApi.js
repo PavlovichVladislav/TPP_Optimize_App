@@ -1,4 +1,3 @@
-const ApiError = require('../error/ApiError');
 const BaseApi = require('./BaseApi');
 
 class BoilersApi extends BaseApi {
@@ -7,38 +6,27 @@ class BoilersApi extends BaseApi {
     }
 
     async getOptimalEquipment(boilers) {
-        try {
-            const result = await this.axios.post('/boilers/optimal', {
-                data: [...boilers]
-            })
+        console.log('gg');
+        const result = await this.axios.post('/boilers/optimal', {
+            boilers
+        })
 
-            return result.data;
-        } catch (error) {
-            throw new ApiError(500, 'Internal server error')
-        }
+        return result.data;
     }
 
     async calcBoilerRGC(load, efficiency) {
-        try {
-            const result = await this.axios.post('/boilers/boiler-hop', {
-                load,
-                efficiency
-            })
+        const result = await this.axios.post('/boilers/boiler-rgc', {
+            load,
+            efficiency
+        })
 
-            return result.data;
-        } catch (error) {
-            throw new ApiError(500, 'Internal server error')
-        }
+        return result.data;
     }
 
     async calcBoilerShopRGC(boilersRGC) {
-        try {
-            const result = await this.axios.post('/boilers/boiler-shop-hop', boilersRGC)
+        const result = await this.axios.post('/boilers/boiler-shop-rgc', boilersRGC)
 
-            return result.data;
-        } catch (error) {
-            throw new ApiError(500, 'Internal server error')
-        }
+        return result.data;
     }
 }
 

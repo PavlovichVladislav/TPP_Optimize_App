@@ -1,47 +1,43 @@
 const BaseApi = require("./BaseApi");
 
+class TurbinesApi extends BaseApi {
+   constructor() {
+      super();
+   }
 
-class TurbinesApi extends BaseApi{
-    constructor() {
-        super();
-    }
+   async getOptimalEquipment(turbines) {
+      const result = await this.axios.post("/turbines/get-optimal", turbines);
 
-    async getOptimalEquipment(turbines) {
-        const result = await this.axios.post('/turbines/get-optimal', {
-            data: [...turbines]
-        })
+      return result.data;
+   }
 
-        return result.data;
-    }
+   async calcCollectionPoint(steam_consumption, season) {
+      const result = await this.axios.post("/turbines/collection-point", {
+         steam_consumption,
+         season,
+      });
 
-    
-    async calcCollectionPoint(steam_consumption, season) {
-        const result = await this.axios.post('/turbines/collection-point', {
-            steam_consumption,
-            season
-        })
+      return result.data;
+   }
 
-        return result.data;
-    }
+   async calcTurbineRGC(turbine_mark, steam_consumption, season) {
+      const result = await this.axios.post("/turbines/turbine-hop", {
+         turbine_mark,
+         steam_consumption,
+         season,
+      });
 
-    async calcTurbineRGC(turbine_mark, steam_consumption, season) {
-        const result = await this.axios.post('/turbines/turbine-hop', {
-            turbine_mark,
-            steam_consumption,
-            season
-        })
+      return result.data;
+   }
 
-        return result.data;
-    }
+   async calcTurbinesShopRGC(turbines_data, season) {
+      const result = await this.axios.post("/turbines/turbine-shop-hop", {
+         turbines_data,
+         season,
+      });
 
-    async calcTurbinesShopRGC(turbines_data, season) {
-        const result = await this.axios.post('/turbines/turbine-shop-hop', {
-            turbines_data,
-            season
-        })
-
-        return result.data;
-    }
+      return result.data;
+   }
 }
 
 module.exports = new TurbinesApi();
