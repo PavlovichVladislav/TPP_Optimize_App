@@ -6,17 +6,14 @@ class BoilersApi extends BaseApi {
     }
 
     async getOptimalEquipment(boilers) {
-        console.log('gg');
-        const result = await this.axios.post('/boilers/optimal', {
-            boilers
-        })
+        const result = await this.axios.post('/boilers/optimal', {boilers})
 
         return result.data;
     }
 
-    async calcBoilerRGC(load, efficiency) {
+    async calcBoilerRGC(Q, efficiency) {
         const result = await this.axios.post('/boilers/boiler-rgc', {
-            load,
+            Q,
             efficiency
         })
 

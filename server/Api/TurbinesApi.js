@@ -21,7 +21,7 @@ class TurbinesApi extends BaseApi {
    }
 
    async calcTurbineRGC(turbine_mark, steam_consumption, season) {
-      const result = await this.axios.post("/turbines/turbine-hop", {
+      const result = await this.axios.post("/turbines/turbine-rgc", {
          turbine_mark,
          steam_consumption,
          season,
@@ -31,7 +31,7 @@ class TurbinesApi extends BaseApi {
    }
 
    async calcTurbinesShopRGC(turbines_data, season) {
-      const result = await this.axios.post("/turbines/turbine-shop-hop", {
+      const result = await this.axios.post("/turbines/turbine-shop-rgc", {
          turbines_data,
          season,
       });

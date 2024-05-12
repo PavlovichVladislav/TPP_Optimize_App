@@ -4,15 +4,16 @@ import { Button } from "@skbkontur/react-ui";
 
 interface Props {
    onSubmit: (number: number[]) => void;
-   size?: number
+   size?: number,
+   value?: number[]
 }
 
-export const InputTable: FC<Props> = ({ onSubmit, size = 12 }) => {
-   const [values, setValues] = useState(Array(size).fill(""));
+export const InputTable: FC<Props> = ({ onSubmit, size = 12, value }) => {
+   const [values, setValues] = useState(value || new Array(size).fill(""));
 
    const handleChange = (index: number, event: ChangeEvent<HTMLInputElement>) => {
       const newValues = [...values];
-      newValues[index] = event.target.value;
+      newValues[index] = +event.target.value;
       setValues(newValues);
    };
 

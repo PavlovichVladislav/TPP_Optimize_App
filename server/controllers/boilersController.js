@@ -46,7 +46,7 @@ class BoilersController {
     
                 boilers.push(boiler.dataValues);
             }
-    
+            
             const result = await BoilersApi.getOptimalEquipment(boilers)
     
             return res.json(result);
@@ -59,7 +59,7 @@ class BoilersController {
      * ХОП для котла
     */
     async calcBoilerRGC(req, res) {
-        const { boiler_mark, load, efficiency } = req.body;
+        const { boiler_mark, Q, efficiency } = req.body;
 
         const boilerRGC = await BoilerRGC.findOne({
             where: {
@@ -72,7 +72,7 @@ class BoilersController {
             res.json({message: "Already exist at DB", rgc: boilerRGC.dataValues})
         }
 
-        const rgc = await BoilersApi.calcBoilerRGC(load, efficiency);
+        const rgc = await BoilersApi.calcBoilerRGC(Q, efficiency);
 
         const createdRGC = await BoilerRGC.create({boiler_mark, ...rgc});
 
