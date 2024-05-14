@@ -14,7 +14,7 @@ export const Table: FC<Props> = ({ title, firstRow, secondRow }) => {
          <table className={styles.table}>
             <thead className={styles.header}>
                <tr className={styles.row}>
-                  <th>b</th>
+                  <th className={styles.th}>b</th>
                   {firstRow.map((item, index) => (
                      <th className={styles.cell} key={index}>
                         {item}
@@ -24,7 +24,7 @@ export const Table: FC<Props> = ({ title, firstRow, secondRow }) => {
             </thead>
             <tbody>
                <tr className={styles.row}>
-                  <th>Q</th>
+                  <th className={styles.th}>Q</th>
                   {secondRow.map((item, index) => (
                      <td className={styles.cell} key={index}>
                         {item}

@@ -1,4 +1,4 @@
-import { Button } from "@skbkontur/react-ui";
+import { Button, Gapped } from "@skbkontur/react-ui";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import styles from "./stationRgc.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
@@ -63,47 +63,62 @@ export const StationRgc = () => {
       }
    };
 
+   const renderResultTables = () => {
+      if (summerStationRgc || winterStationRgc || offSeasonStationRgc) {
+         return (
+            <Gapped vertical gap={24} className={styles.tablesWrapper}>
+               {summerStationRgc && (
+                  <div className="layout">
+                     <Table
+                        title="ХОП станции лето"
+                        firstRow={summerStationRgc.b}
+                        secondRow={summerStationRgc.N}
+                     />
+                  </div>
+               )}
+               {winterStationRgc && (
+                  <div className="layout">
+                     <Table
+                        title="ХОП станции лето"
+                        firstRow={winterStationRgc.b}
+                        secondRow={winterStationRgc.N}
+                     />
+                  </div>
+               )}
+               {offSeasonStationRgc && (
+                  <div className="layout">
+                     <Table
+                        title="ХОП станции лето"
+                        firstRow={offSeasonStationRgc.b}
+                        secondRow={offSeasonStationRgc.N}
+                     />
+                  </div>
+               )}
+            </Gapped>
+         );
+      }
+   };
+
    return (
       <div>
          <div className="layout">
             <h2 className={styles.title}>Расчёт ХОП станции</h2>
             <div className={styles.subtitle}>
                Предварительно должны быть посчитаны ХОП котельного и турбинного цехов
-               <br />
-               {enoughData ? "данных хватает" : "Не хватает данных"}
             </div>
             <div className={styles.footerWrapper}>
                <Button
+                  className={styles.btn}
                   use="primary"
                   size="medium"
                   onClick={onCalcStationRGC}
                   disabled={!enoughData}
                >
-                  Рассчитать
+                  {enoughData ? "Рассчитать" : "Не хватает данных"}
                </Button>
             </div>
-            {summerStationRgc && (
-               <Table
-                  title="ХОП станции лето"
-                  firstRow={summerStationRgc.b}
-                  secondRow={summerStationRgc.N}
-               />
-            )}
-            {winterStationRgc && (
-               <Table
-                  title="ХОП станции лето"
-                  firstRow={winterStationRgc.b}
-                  secondRow={winterStationRgc.N}
-               />
-            )}
-            {offSeasonStationRgc && (
-               <Table
-                  title="ХОП станции лето"
-                  firstRow={offSeasonStationRgc.b}
-                  secondRow={offSeasonStationRgc.N}
-               />
-            )}
          </div>
+         {renderResultTables()}
       </div>
    );
 };

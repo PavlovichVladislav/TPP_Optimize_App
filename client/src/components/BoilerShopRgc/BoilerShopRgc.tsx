@@ -3,7 +3,7 @@ import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
 import { BoilerCard } from "../EquipmentCard/BoilerCard";
 import { Table } from "../Table/Table";
-import { Button } from "@skbkontur/react-ui";
+import { Button, Gapped } from "@skbkontur/react-ui";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
    addInventoryBoiler,
@@ -55,13 +55,14 @@ export const BoilerShopRgc = () => {
    const renderContent = () => {
       if (boilerShopRgc) {
          return (
-            <>
-               <Table
-                  title="ХОП лето"
-                  firstRow={boilerShopRgc.summerBoilerShopRGC.b}
-                  secondRow={boilerShopRgc.summerBoilerShopRGC.Q}
-               />
-               {/* 
+            <Gapped vertical gap={24} className={styles.tablesWrapper}>
+               <div className="layout">
+                  <Table
+                     title="ХОП лето"
+                     firstRow={boilerShopRgc.summerBoilerShopRGC.b}
+                     secondRow={boilerShopRgc.summerBoilerShopRGC.Q}
+                  />
+                  {/* 
                <Graph 
                   xData={boilerShopRgc.summerBoilerShopRGC.Q}
                   yData={boilerShopRgc.summerBoilerShopRGC.b}
@@ -69,27 +70,31 @@ export const BoilerShopRgc = () => {
                   xAxisLabel="Q"
                   yAxisLabel="b"
                /> */}
-
-               <Table
-                  title="ХОП зима"
-                  firstRow={boilerShopRgc.winterBoilerShopRGC.b}
-                  secondRow={boilerShopRgc.winterBoilerShopRGC.Q}
-               />
-               <Table
-                  title="ХОП межсезонье"
-                  firstRow={boilerShopRgc.offSeasonBoilerShopRGC.b}
-                  secondRow={boilerShopRgc.offSeasonBoilerShopRGC.Q}
-               />
-            </>
+               </div>
+               <div className="layout">
+                  <Table
+                     title="ХОП зима"
+                     firstRow={boilerShopRgc.winterBoilerShopRGC.b}
+                     secondRow={boilerShopRgc.winterBoilerShopRGC.Q}
+                  />
+               </div>
+               <div className="layout">
+                  <Table
+                     title="ХОП межсезонье"
+                     firstRow={boilerShopRgc.offSeasonBoilerShopRGC.b}
+                     secondRow={boilerShopRgc.offSeasonBoilerShopRGC.Q}
+                  />
+               </div>
+            </Gapped>
          );
       }
 
       if (optimalBoilers) {
          return (
             <>
-               <>
+               <Gapped vertical gap={24} className={styles.tablesWrapper}>
                   {optimalBoilers?.summerBoilers && (
-                     <div>
+                     <div className="layout">
                         <h2>Лето </h2>
                         <div>
                            {optimalBoilers.summerBoilers.map((boiler) => (
@@ -99,7 +104,7 @@ export const BoilerShopRgc = () => {
                      </div>
                   )}
                   {optimalBoilers?.winterBoilers && (
-                     <div>
+                     <div className="layout">
                         <h2>Зима </h2>
                         <div>
                            {optimalBoilers.winterBoilers.map((boiler) => (
@@ -109,7 +114,7 @@ export const BoilerShopRgc = () => {
                      </div>
                   )}
                   {optimalBoilers?.offSeasonBoilers && (
-                     <div>
+                     <div className="layout">
                         <h2>Межсезонье </h2>
                         <div>
                            {optimalBoilers.offSeasonBoilers.map((boiler) => (
@@ -118,7 +123,7 @@ export const BoilerShopRgc = () => {
                         </div>
                      </div>
                   )}
-               </>
+               </Gapped>
                <div className={styles.footerWrapper}>
                   <Button use="primary" size="medium" onClick={calcBoilerShopRGC}>
                      Рассчитать ХОП

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import styles from "./optimalEquipment.module.css";
 import OptimizeApi from "../../Api/OptimizeApi";
-import { Button } from "@skbkontur/react-ui";
+import { Button, Gapped } from "@skbkontur/react-ui";
 import { TurbineCard } from "../EquipmentCard/TurbineCard";
 import { SteamConsumption } from "../../types/types";
 import { Table } from "../Table/Table";
@@ -92,9 +92,9 @@ export const TurbineShopRgc = () => {
    const renderContent = () => {
       if (summerRgc || winterRgc || offSeasonRgc) {
          return (
-            <>
+            <Gapped gap={24} vertical className={styles.tablesWrapper}>
                {summerRgc && (
-                  <>
+                  <div className="layout"> 
                      <Table
                         firstRow={summerRgc.flow_char.x}
                         secondRow={summerRgc.flow_char.y}
@@ -105,10 +105,10 @@ export const TurbineShopRgc = () => {
                         secondRow={summerRgc.turbines_shop_hop.y}
                         title="Лето. ХОП турбинного цеха"
                      />
-                  </>
+                  </div>
                )}
                {winterRgc && (
-                  <>
+                  <div className="layout">
                      <Table
                         firstRow={winterRgc.flow_char.x}
                         secondRow={winterRgc.flow_char.y}
@@ -119,10 +119,10 @@ export const TurbineShopRgc = () => {
                         secondRow={winterRgc.turbines_shop_hop.y}
                         title="Зима. ХОП турбинного цеха"
                      />
-                  </>
+                  </div>
                )}
                {offSeasonRgc && (
-                  <>
+                  <div className="layout">
                      <Table
                         firstRow={offSeasonRgc.flow_char.x}
                         secondRow={offSeasonRgc.flow_char.y}
@@ -133,9 +133,9 @@ export const TurbineShopRgc = () => {
                         secondRow={offSeasonRgc.turbines_shop_hop.y}
                         title="Межсезонье. ХОП турбинного цеха"
                      />
-                  </>
+                  </div>
                )}
-            </>
+            </Gapped>
          );
       }
 
@@ -143,7 +143,7 @@ export const TurbineShopRgc = () => {
          return (
             <>
                {optimalTurbines?.summerTurbines && (
-                  <div>
+                  <div className="layout">
                      <h2>Лето </h2>
                      <div>
                         {optimalTurbines?.summerTurbines.map((turbine) => (

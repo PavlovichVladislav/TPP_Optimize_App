@@ -23,6 +23,10 @@
     gap: 12px;
 }
 
+.tablesWrapper {
+    margin-top: 24px;
+}
+
 .footerWrapper {
     display: flex;
     justify-content: end;
