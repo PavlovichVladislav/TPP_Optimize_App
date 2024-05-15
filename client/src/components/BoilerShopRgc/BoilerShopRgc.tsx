@@ -7,8 +7,10 @@ import { Button, Gapped } from "@skbkontur/react-ui";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
    addInventoryBoiler,
+   clearOptimalBoilersInventory,
    deleteInventoryBoiler,
    setBoilerShopRgc,
+   clearShopRgc,
    setBoilers,
    setOptimalBoilersInventory,
 } from "../../store/reducers/BoilersSlice";
@@ -46,16 +48,34 @@ export const BoilerShopRgc = () => {
       dispatch(setOptimalBoilersInventory(optimalBoilers));
    };
 
-   const calcBoilerShopRGC = async () => {
+   const onCalcBoilerShopRGC = async () => {
       const { boilerShopRgc } = await optimizeApi.calcBoilerShopRGC(optimalBoilers!);
 
       dispatch(setBoilerShopRgc(boilerShopRgc));
+   };
+
+   // Очищаем состав котельного оборудования, чтоб увидеть
+   // список с выбором оборудования
+   const onClearOptimalBoilers = () => {
+      dispatch(clearOptimalBoilersInventory());
+   };
+
+   // Очищаем ХОП, чтоб отобразился экран оборудования
+   const onClearRgc = () => {
+      dispatch(clearShopRgc());
    };
 
    const renderContent = () => {
       if (boilerShopRgc) {
          return (
             <Gapped vertical gap={24} className={styles.tablesWrapper}>
+               <div className={styles.headerWrapper}>
+                  <h2 className={styles.title}>ХОП котельного цеха</h2>
+                  <div className={styles.subtitle}>
+                     Для подобранного оптимального состава оборудования <br /> рассчитаны значения
+                     ХОП по сезонам года
+                  </div>
+               </div>
                <div className="layout">
                   <Table
                      title="ХОП лето"
@@ -85,6 +105,11 @@ export const BoilerShopRgc = () => {
                      secondRow={boilerShopRgc.offSeasonBoilerShopRGC.Q}
                   />
                </div>
+               <div className={styles.footerWrapper}>
+                  <Button use="primary" size="medium" onClick={onClearRgc}>
+                     Вернуться к оборудованию
+                  </Button>
+               </div>
             </Gapped>
          );
       }
@@ -93,9 +118,16 @@ export const BoilerShopRgc = () => {
          return (
             <>
                <Gapped vertical gap={24} className={styles.tablesWrapper}>
+                  <div className={styles.headerWrapper}>
+                     <h2 className={styles.title}>Оптимальный состав оборудования</h2>
+                     <div className={styles.subtitle}>
+                        Для выбранного оборудования подобран оптимальный состав по <br /> сезонам
+                        года
+                     </div>
+                  </div>
                   {optimalBoilers?.summerBoilers && (
-                     <div className="layout">
-                        <h2>Лето </h2>
+                     <div>
+                        <h2 className={styles.seasonName}>Лето </h2>
                         <div>
                            {optimalBoilers.summerBoilers.map((boiler) => (
                               <BoilerCard key={boiler.station_number} boiler={boiler} />
@@ -104,8 +136,8 @@ export const BoilerShopRgc = () => {
                      </div>
                   )}
                   {optimalBoilers?.winterBoilers && (
-                     <div className="layout">
-                        <h2>Зима </h2>
+                     <div>
+                        <h2 className={styles.seasonName}>Зима </h2>
                         <div>
                            {optimalBoilers.winterBoilers.map((boiler) => (
                               <BoilerCard key={boiler.station_number} boiler={boiler} />
@@ -114,8 +146,8 @@ export const BoilerShopRgc = () => {
                      </div>
                   )}
                   {optimalBoilers?.offSeasonBoilers && (
-                     <div className="layout">
-                        <h2>Межсезонье </h2>
+                     <div>
+                        <h2 className={styles.seasonName}>Межсезонье </h2>
                         <div>
                            {optimalBoilers.offSeasonBoilers.map((boiler) => (
                               <BoilerCard key={boiler.station_number} boiler={boiler} />
@@ -125,7 +157,10 @@ export const BoilerShopRgc = () => {
                   )}
                </Gapped>
                <div className={styles.footerWrapper}>
-                  <Button use="primary" size="medium" onClick={calcBoilerShopRGC}>
+                  <Button use="primary" size="medium" onClick={onClearOptimalBoilers}>
+                     Вернуться к выбору
+                  </Button>
+                  <Button use="primary" size="medium" onClick={onCalcBoilerShopRGC}>
                      Рассчитать ХОП
                   </Button>
                </div>
@@ -135,6 +170,12 @@ export const BoilerShopRgc = () => {
 
       return (
          <>
+            <div className={styles.headerWrapper}>
+               <h2 className={styles.title}>Оптимальный состав оборудования</h2>
+               <div className={styles.subtitle}>
+                  Выберите оборудование, которое есть у вас в наличии
+               </div>
+            </div>
             <div className={styles.equipmentWrapper}>
                <div>
                   {boilers.map((boiler) => (
@@ -157,15 +198,5 @@ export const BoilerShopRgc = () => {
       );
    };
 
-   return (
-      <section className={styles.optimalEquipment}>
-         <div className={styles.headerWrapper}>
-            <h2 className={styles.title}>Оптимальный состав оборудования</h2>
-            <div className={styles.subtitle}>
-               Выберите оборудование, которое есть у вас в наличии
-            </div>
-         </div>
-         {renderContent()}
-      </section>
-   );
+   return <section className={styles.optimalEquipment}>{renderContent()}</section>;
 };

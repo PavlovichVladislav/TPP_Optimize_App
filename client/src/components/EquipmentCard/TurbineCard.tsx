@@ -40,7 +40,7 @@ export const TurbineCard: FC<Props> = ({
                Удалить
             </Button>
          ) : (
-            <Button use="primary" size="medium" onClick={() => onAddTurbine(station_number)}>
+            <Button use="pay" size="medium" onClick={() => onAddTurbine(station_number)}>
                Добавить
             </Button>
          );
@@ -72,7 +72,9 @@ export const TurbineCard: FC<Props> = ({
                </div>
             </div>
          </div>
-         <div className={styles.cardFooter}>{renderSelectBtn()}</div>
+         <div className={styles.cardFooter}>
+            {renderSelectBtn()}
+         </div>
          {selected && onSubmit && (
             <InputTable
                value={mockData[station_number]}

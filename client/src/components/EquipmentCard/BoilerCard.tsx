@@ -22,7 +22,7 @@ export const BoilerCard: FC<Props> = ({ boiler, selected, onAddBoiler, onDeleteB
                Удалить
             </Button>
          ) : (
-            <Button use="primary" size="medium" onClick={() => onAddBoiler(station_number)}>
+            <Button use="pay" size="medium" onClick={() => onAddBoiler(station_number)}>
                Добавить
             </Button>
          );

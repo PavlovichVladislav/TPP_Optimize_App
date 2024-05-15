@@ -6,7 +6,17 @@ import { TurbineCard } from "../EquipmentCard/TurbineCard";
 import { SteamConsumption } from "../../types/types";
 import { Table } from "../Table/Table";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { addInventoryTurbine, deleteInventoryTurbine, setOffSeasonRgc, setOptimalTurbinesInventory, setSteamConsumptions, setSummerRgc, setTurbines, setWinterRgc } from "../../store/reducers/TurbineSlice";
+import {
+   addInventoryTurbine,
+   clearOptimalTurbinesInventory,
+   deleteInventoryTurbine,
+   setOffSeasonRgc,
+   setOptimalTurbinesInventory,
+   setSteamConsumptions,
+   setSummerRgc,
+   setTurbines,
+   setWinterRgc,
+} from "../../store/reducers/TurbineSlice";
 
 export const TurbineShopRgc = () => {
    const {
@@ -45,6 +55,10 @@ export const TurbineShopRgc = () => {
 
       dispatch(setOptimalTurbinesInventory(optimalTurbines));
    };
+
+   const onClearOptimalBoilers = () => {
+      dispatch(clearOptimalTurbinesInventory());
+   }
 
    const onCalcTurbineShopRgc = async () => {
       if (optimalTurbines) {
@@ -94,7 +108,7 @@ export const TurbineShopRgc = () => {
          return (
             <Gapped gap={24} vertical className={styles.tablesWrapper}>
                {summerRgc && (
-                  <div className="layout"> 
+                  <div className="layout">
                      <Table
                         firstRow={summerRgc.flow_char.x}
                         secondRow={summerRgc.flow_char.y}
@@ -141,43 +155,52 @@ export const TurbineShopRgc = () => {
 
       if (optimalTurbines) {
          return (
-            <>
+            <Gapped vertical gap={24} className={styles.tablesWrapper}>
+               <div className="layout">
+                  <h2 className={styles.title}>Оптимальный состав оборудования</h2>
+                  <div className={styles.subtitle}>
+                     Для выбранного оборудования подобран оптимальный состав по <br /> сезонам года
+                  </div>
+               </div>
                {optimalTurbines?.summerTurbines && (
-                  <div className="layout">
-                     <h2>Лето </h2>
+                  <>
+                     <h2 className={styles.seasonName}>Лето </h2>
                      <div>
                         {optimalTurbines?.summerTurbines.map((turbine) => (
                            <TurbineCard key={turbine.station_number} turbine={turbine} />
                         ))}
                      </div>
-                  </div>
+                  </>
                )}
                {optimalTurbines?.offSeasonTurbines && (
-                  <div>
-                     <h2>Межсезонье </h2>
+                  <>
+                     <h2 className={styles.seasonName}>Межсезонье </h2>
                      <div>
                         {optimalTurbines?.offSeasonTurbines.map((turbine) => (
                            <TurbineCard key={turbine.station_number} turbine={turbine} />
                         ))}
                      </div>
-                  </div>
+                  </>
                )}
                {optimalTurbines?.winterTurbines && (
-                  <div>
-                     <h2>Зима </h2>
+                  <>
+                     <h2 className={styles.seasonName}>Зима </h2>
                      <div>
                         {optimalTurbines?.winterTurbines.map((turbine) => (
                            <TurbineCard key={turbine.station_number} turbine={turbine} />
                         ))}
                      </div>
-                  </div>
+                  </>
                )}
                <div className={styles.footerWrapper}>
+                  <Button use="primary" size="medium" onClick={onClearOptimalBoilers}>
+                     Вернуться к выбору
+                  </Button>
                   <Button use="primary" size="medium" onClick={onCalcTurbineShopRgc}>
                      Рассчитать ХОП
                   </Button>
                </div>
-            </>
+            </Gapped>
          );
       }
 
@@ -191,6 +214,12 @@ export const TurbineShopRgc = () => {
 
       return (
          <>
+            <div className="layout">
+               <h2 className={styles.title}>Оптимальный состав оборудования</h2>
+               <div className={styles.subtitle}>
+                  Выберите оборудование, которое есть у вас в наличии
+               </div>
+            </div>
             <div className={styles.equipmentWrapper}>
                <div>
                   {turbines.map((turbine) => (
@@ -214,15 +243,5 @@ export const TurbineShopRgc = () => {
       );
    };
 
-   return (
-      <section className={styles.optimalEquipment}>
-         <div className="layout">
-            <h2 className={styles.title}>Оптимальный состав оборудования</h2>
-            <div className={styles.subtitle}>
-               Выберите оборудование, которое есть у вас в наличии
-            </div>
-         </div>
-         {renderContent()}
-      </section>
-   );
+   return <section className={styles.optimalEquipment}>{renderContent()}</section>;
 };

@@ -4,8 +4,8 @@ import { Button } from "@skbkontur/react-ui";
 
 interface Props {
    onSubmit: (number: number[]) => void;
-   size?: number,
-   value?: number[]
+   size?: number;
+   value?: number[];
 }
 
 export const InputTable: FC<Props> = ({ onSubmit, size = 12, value }) => {
@@ -56,7 +56,7 @@ export const InputTable: FC<Props> = ({ onSubmit, size = 12, value }) => {
             <thead className={styles.header}>
                <tr className={styles.row}>
                   {[...Array(size).keys()].map((index) => {
-                     if (index < size /2 ) return null;
+                     if (index < size / 2) return null;
 
                      return <th key={index}>dd.0{index + 1}.yy</th>;
                   })}
@@ -81,9 +81,11 @@ export const InputTable: FC<Props> = ({ onSubmit, size = 12, value }) => {
                </tr>
             </tbody>
          </table>
-         <Button use="primary" size="medium" onClick={handleSubmit}>Подтвердить</Button>
+         <div className={styles.btnWrapper}>
+            <Button className={styles.btn} use="primary" size="medium" onClick={handleSubmit}>
+               Подтвердить
+            </Button>
+         </div>
       </div>
    );
 };
-
-

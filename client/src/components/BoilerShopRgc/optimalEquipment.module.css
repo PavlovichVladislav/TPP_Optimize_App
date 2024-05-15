@@ -14,7 +14,7 @@
 }
 
 .optimalEquipment {
-    width: 652px;
+    /* width: 652px; */
 }
 
 .equipmentWrapper {
@@ -34,9 +34,14 @@
     justify-content: end;
     padding: 24px;
     border-radius: 16px;
+    gap: 12px;
     background-color: #FFFFFF;
 }
 
 .tablesWrapper {
     margin-top: 24px;
+}
+
+.seasonName {
+    margin-bottom: 4px;
 }

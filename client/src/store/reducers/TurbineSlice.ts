@@ -54,6 +54,9 @@ export const turbineSlice = createSlice({
       setOptimalTurbinesInventory: (state, action: PayloadAction<OptimalTurbinesInventory>) => {
          state.optimalTurbines = action.payload;
       },
+      clearOptimalTurbinesInventory: (state) => {
+         state.optimalTurbines = undefined;
+      },
       setSteamConsumptions: (state, action: PayloadAction<SteamConsumption[]>) => {
          state.steamConsumptions = action.payload;
       },
@@ -74,6 +77,7 @@ export const {
    addInventoryTurbine,
    deleteInventoryTurbine,
    setOptimalTurbinesInventory,
+   clearOptimalTurbinesInventory,
    setSummerRgc,
    setWinterRgc,
    setOffSeasonRgc,

@@ -1,7 +1,7 @@
 .cardWrapper {
     padding: 12px 24px;
     border-radius: 16px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     background: #FFFFFF;
 }
 
@@ -38,4 +38,5 @@
     margin-top: 8px;
     display: flex;
     justify-content: end;
+    gap: 12px;
 }

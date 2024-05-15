@@ -38,6 +38,12 @@ export const boilerSlice = createSlice({
       setOptimalBoilersInventory: (state, action: PayloadAction<OptimalBoilersInventory>) => {
          state.optimalBoilers = action.payload;
       },
+      clearOptimalBoilersInventory: (state) => {
+         state.optimalBoilers = undefined;
+      },
+      clearShopRgc: (state) => {
+         state.boilerShopRgc = undefined;
+      },
       setBoilerShopRgc: (state, action: PayloadAction<BoilerShopRgc>) => {
          state.boilerShopRgc = action.payload;
       },
@@ -49,6 +55,8 @@ export const {
    addInventoryBoiler,
    deleteInventoryBoiler,
    setOptimalBoilersInventory,
+   clearOptimalBoilersInventory,
+   clearShopRgc,
    setBoilerShopRgc,
 } = boilerSlice.actions;
 
