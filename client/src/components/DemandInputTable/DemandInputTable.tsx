@@ -43,7 +43,7 @@ export const DemandInputTable: FC<Props> = ({ size, onSubmit }) => {
          <table className={styles.table}>
             <thead className={styles.header}>
                <tr className={styles.row}>
-                  <th>Электроэнергия</th>
+                  <th>Объём <br/> электроэнергии</th>
                   <th>Стоимость</th>
                </tr>
             </thead>

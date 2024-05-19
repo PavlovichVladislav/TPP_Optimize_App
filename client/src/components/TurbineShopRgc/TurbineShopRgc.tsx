@@ -16,6 +16,7 @@ import {
    setSummerRgc,
    setTurbines,
    setWinterRgc,
+   clearShopRgc,
 } from "../../store/reducers/TurbineSlice";
 
 export const TurbineShopRgc = () => {
@@ -58,7 +59,7 @@ export const TurbineShopRgc = () => {
 
    const onClearOptimalBoilers = () => {
       dispatch(clearOptimalTurbinesInventory());
-   }
+   };
 
    const onCalcTurbineShopRgc = async () => {
       if (optimalTurbines) {
@@ -103,10 +104,22 @@ export const TurbineShopRgc = () => {
       }
    };
 
+   // Очищаем ХОП, чтоб отобразился экран оборудования
+   const onClearRgc = () => {
+      dispatch(clearShopRgc());
+   };
+
    const renderContent = () => {
       if (summerRgc || winterRgc || offSeasonRgc) {
          return (
             <Gapped gap={24} vertical className={styles.tablesWrapper}>
+               <div className="layout">
+                  <h2 className={styles.title}>ХОП турбинного цеха</h2>
+                  <div className={styles.subtitle}>
+                     Для подобранного оптимального состава оборудования <br /> рассчитаны значения
+                     ХОП по сезонам года
+                  </div>
+               </div>
                {summerRgc && (
                   <div className="layout">
                      <Table
@@ -149,6 +162,11 @@ export const TurbineShopRgc = () => {
                      />
                   </div>
                )}
+               <div className={styles.footerWrapper}>
+                  <Button use="primary" size="medium" onClick={onClearRgc}>
+                     Вернуться к оборудованию
+                  </Button>
+               </div>
             </Gapped>
          );
       }

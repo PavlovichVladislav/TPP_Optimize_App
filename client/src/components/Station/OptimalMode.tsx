@@ -23,7 +23,7 @@ const OptimalMode = () => {
       demand,
       summerOptimalMode,
       winterOptimalMode,
-      offSeasonOptimalMode
+      offSeasonOptimalMode,
    } = useAppSelector((state) => state.stationReducer);
    const [demandDataLen, setDemandDataLen] = useState<number>(0);
    const optimizeApi = new OptimizeApi();
@@ -118,34 +118,34 @@ const OptimalMode = () => {
    };
 
    const renderResultTables = () => {
-      // if (summerOptimalMode) {
-      //    return (
-      //       <ResultTable
-      //          column1={summerOptimalMode?.zero_percent}
-      //          column2={summerOptimalMode?.up_percent}
-      //       />
-      //    );
-      // }
-
       return (
          <>
             {summerOptimalMode && (
-               <ResultTable
-                  column1={summerOptimalMode?.zero_percent}
-                  column2={summerOptimalMode?.up_percent}
-               />
+               <>
+                  <h3 className={styles.mt4}>Лето </h3>
+                  <ResultTable
+                     column1={summerOptimalMode?.zero_percent}
+                     column2={summerOptimalMode?.up_percent}
+                  />
+               </>
             )}
             {winterOptimalMode && (
-               <ResultTable
-                  column1={winterOptimalMode?.zero_percent}
-                  column2={winterOptimalMode?.up_percent}
-               />
+               <>
+                  <h3 className={styles.mt4}>Зима </h3>
+                  <ResultTable
+                     column1={winterOptimalMode?.zero_percent}
+                     column2={winterOptimalMode?.up_percent}
+                  />
+               </>
             )}
             {offSeasonOptimalMode && (
-               <ResultTable
-                  column1={offSeasonOptimalMode?.zero_percent}
-                  column2={offSeasonOptimalMode?.up_percent}
-               />
+               <>
+                  <h3 className={styles.mt4}>Осень </h3>
+                  <ResultTable
+                     column1={offSeasonOptimalMode?.zero_percent}
+                     column2={offSeasonOptimalMode?.up_percent}
+                  />
+               </>
             )}
          </>
       );
@@ -153,11 +153,12 @@ const OptimalMode = () => {
 
    return (
       <div className="layout">
-         <h2 className={styles.title}>Расчёт оптимального режима работы станции </h2>
+         <h2 className={styles.title}>
+            Расчёт оптимального режима <br /> работы станции{" "}
+         </h2>
          <div className={styles.subtitle}>
             Предварительно должен быть посчитан ХОП станции
             <br />
-            {enoughData ? "данных хватает" : "Не хватает данных"}
          </div>
          <div className={styles.footerWrapper}>
             <Button
@@ -165,29 +166,29 @@ const OptimalMode = () => {
                size="medium"
                onClick={onCalcStationOptimalMode}
                disabled={!enoughData}
+               className={styles.btn}
             >
-               Рассчитать
+               {enoughData ? "Рассчитать" : "Не хватает данных"}
             </Button>
          </div>
-         <div>Цена топлива</div>
-         <InputTable onSubmit={onInputFuelPrice} />
+         <h3 className={styles.priceTitle}>Цена топлива</h3>
+         <InputTable
+            value={[
+               314.66, 290.3, 346.13, 327.89, 306.26, 335.53, 409.96, 346.85, 371.01, 366.85,
+               427.21, 536,
+            ]}
+            onSubmit={onInputFuelPrice}
+         />
+         <h3 className={styles.priceTitle}>Укажите кол-во данных спроса</h3>
          <Input
+            className={styles.mt4}
             type="number"
-            placeholder="Укажите кол-во данных спроса"
             value={String(demandDataLen)}
             onValueChange={(value) => {
                console.log(value);
                setDemandDataLen(+value);
             }}
          />
-         <Button
-            use="primary"
-            size="medium"
-            onClick={onCalcStationOptimalMode}
-            disabled={!demandDataLen}
-         >
-            Подтвердить количество
-         </Button>
          {renderDemandTable()}
          {renderResultTables()}
       </div>

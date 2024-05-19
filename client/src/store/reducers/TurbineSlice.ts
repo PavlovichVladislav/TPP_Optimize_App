@@ -69,6 +69,11 @@ export const turbineSlice = createSlice({
       setOffSeasonRgc: (state, action: PayloadAction<TurbineShopRgc>) => {
          state.offSeasonRgc = action.payload;
       },
+      clearShopRgc: (state) => {
+         state.summerRgc = undefined;
+         state.winterRgc = undefined;
+         state.offSeasonRgc = undefined;
+      }
    },
 });
 
@@ -81,7 +86,8 @@ export const {
    setSummerRgc,
    setWinterRgc,
    setOffSeasonRgc,
-   setSteamConsumptions
+   setSteamConsumptions,
+   clearShopRgc
 } = turbineSlice.actions;
 
 export default turbineSlice.reducer;

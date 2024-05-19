@@ -6,21 +6,29 @@ interface Props {
    column2: number[];
 }
 
+const rowNames = [
+   'Nопт, МВт',
+   'Эопт, МВТ*ч',
+   'Цена продажи, руб/МВТ*ч',
+   'Доход, руб',
+   'Прибыль, руб'
+]
+
 const ResultTable: FC<Props> = ({ column1, column2 }) => {
    return (
       <div className={styles.tableWrapper}>
          <table className={styles.table}>
             <thead className={styles.header}>
                <tr className={styles.row}>
-                  <th></th>
-                  <th>Column 2</th>
-                  <th>Column 3</th>
+                  <th>Норма прибыли</th>
+                  <th>0 %</th>
+                  <th>25 %</th>
                </tr>
             </thead>
             <tbody>
                {column1.map((item, index) => (
                   <tr key={index} className={styles.row}>
-                     <td  className={styles.cell}>{index + 1}</td>
+                     <td  className={styles.cell}>{rowNames[index]}</td>
                      <td className={styles.cell}>{item}</td>
                      <td className={styles.cell}>{column2[index]}</td>
                   </tr>
